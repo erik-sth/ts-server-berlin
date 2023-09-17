@@ -9,8 +9,7 @@ function createGraph(items: Item[]): DirectedGraph<Item> {
   });
   g.nodes.forEach((node) => {
     const nextAvailableEvent = nextAvailableEvents(node.value.endTime, items);
-    console.log("\n" + node.value._id + ": ");
-    nextAvailableEvent.forEach((item) => console.log(item._id));
+    // logGraphRelations(node, nextAvailableEvent); //for "visualizing" the graph
 
     if (nextAvailableEvent.length === 0) return;
 
@@ -20,6 +19,11 @@ function createGraph(items: Item[]): DirectedGraph<Item> {
     });
   });
   return g;
+}
+
+function logGraphRelations(node: GraphNode<Item>, nextAvailableEvent: Item[]) {
+  console.log("\n" + node.value._id + ": ");
+  nextAvailableEvent.forEach((item) => console.log(item._id));
 }
 function nextAvailableEvents(currentItemEndTime: Date, items: Item[]): Item[] {
   const maxTimeDifferenceMs = 5 * 60 * 60 * 1000; // 5 hours in milliseconds
@@ -62,8 +66,8 @@ function allocateItemsToStudents(
   students.forEach((student) => {
     entries.forEach((entrie) => {
       const path = dfs(entrie, entrie.edges, requiredIds, [], student._id);
-      console.log(path);
       if (path !== null) {
+        console.log(`Found a path for ${student._id}:`, path);
         return;
       }
     });
@@ -91,13 +95,16 @@ function dfs(
   path: string[],
   studentId: string
 ): null | string[] {
-  if (!requiredIds.includes(node.value.eventId)) return null; // Stop exploring if not required
+  if (
+    !requiredIds.includes(node.value.eventId) ||
+    node.value.groupSize < node.value.studentIds.length + 1
+  )
+    return null; // Stop exploring if not required
 
   requiredIds = requiredIds.filter((item) => item !== node.value.eventId);
   path.push(node.value._id);
 
   if (requiredIds.length === 0) {
-    console.log(`Found a path for ${studentId}:`, path);
     allocatePathToStudent(studentId, path);
     return path; // Return the path when it's complete
   } else if (edges !== null) {
@@ -127,9 +134,11 @@ function main(items: Item[], students: IStudent[]): DirectedGraph<Item> {
   allocateItemsToStudents(g, students);
   return g;
 }
+console.time();
 main(items, students);
-findItemsByStudentId("person1", items).forEach((elemement) =>
-  console.log(elemement.title, "test")
-);
+console.timeEnd();
+// findItemsByStudentId("person1", items).forEach((elemement) =>
+//   console.log(elemement.title, "test")
+// );
 
 export { main };

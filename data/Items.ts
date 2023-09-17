@@ -15,16 +15,16 @@ const items: Item[] = [
     endTime: new Date(2023, 8, 16, 10, 0),
     eventId: "asdfjklasdföalsjf",
     studentIds: [],
-    groupSize: 10,
+    groupSize: 7,
   },
   {
     _id: "id2",
     title: "Lunch Break",
-    startTime: new Date(2023, 8, 16, 12, 0),
-    endTime: new Date(2023, 8, 16, 13, 0),
-    eventId: "hallo3",
+    startTime: new Date(2023, 8, 16, 9, 0),
+    endTime: new Date(2023, 8, 16, 10, 0),
+    eventId: "hallo4",
     studentIds: [],
-    groupSize: 2,
+    groupSize: 7,
   },
   {
     _id: "id3",
@@ -33,7 +33,7 @@ const items: Item[] = [
     endTime: new Date(2023, 8, 16, 15, 0),
     eventId: "hallo2",
     studentIds: [],
-    groupSize: 4,
+    groupSize: 7,
   },
   {
     _id: "id4",
@@ -42,7 +42,7 @@ const items: Item[] = [
     endTime: new Date(2023, 8, 17, 12, 0),
     eventId: "solo 3",
     studentIds: [],
-    groupSize: 10,
+    groupSize: 7,
   },
   {
     _id: "id5",
@@ -51,7 +51,7 @@ const items: Item[] = [
     endTime: new Date(2023, 8, 17, 15, 30),
     eventId: "hallo2",
     studentIds: [],
-    groupSize: 4,
+    groupSize: 7,
   },
   {
     _id: "id6",
@@ -60,7 +60,7 @@ const items: Item[] = [
     endTime: new Date(2023, 8, 18, 12, 0),
     eventId: "asdfjklasdföalsjf",
     studentIds: [],
-    groupSize: 10,
+    groupSize: 7,
   },
   {
     _id: "id7",
@@ -69,7 +69,7 @@ const items: Item[] = [
     endTime: new Date(2023, 8, 18, 15, 45),
     eventId: "hallo3",
     studentIds: [],
-    groupSize: 5,
+    groupSize: 7,
   },
   {
     _id: "id8",
