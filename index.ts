@@ -48,6 +48,10 @@ function nextAvailableEvents(currentItemEndTime: Date, items: Item[]): Item[] {
   return nextEvents;
 }
 
+// function calculateTravelTime(): Date {
+//   return newDate();
+// }
+
 // Helper function to check if the date is the next day
 function isNextDay(date1: Date, date2: Date): boolean {
   return (
@@ -61,19 +65,23 @@ function allocateItemsToStudents(
   graph: DirectedGraph<Item>,
   students: IStudent[]
 ) {
-  let requiredIds = getRequiredIds(items);
+  let requiredIds = getRequiredIdsforEveryone(items);
   const entries = graph.getNodesWithoutIngoingEdges();
+  let stop = false;
   students.forEach((student) => {
+    stop = false;
     entries.forEach((entrie) => {
-      const path = dfs(entrie, entrie.edges, requiredIds, [], student._id);
-      if (path !== null) {
-        console.log(`Found a path for ${student._id}:`, path);
-        return;
+      if (!stop) {
+        const path = dfs(entrie, entrie.edges, requiredIds, [], [student._id]);
+        if (path !== null) {
+          stop = true;
+          console.log(`Found a path for ${student._id}:`, path);
+        }
       }
     });
   });
 }
-function getRequiredIds(items: Item[]): string[] {
+function getRequiredIdsforEveryone(items: Item[]): string[] {
   const uniqueIds = new Set<string>();
   items.forEach((item) => uniqueIds.add(item.eventId));
   return Array.from(uniqueIds.values());
@@ -82,10 +90,10 @@ function studentCanAttend(student: IStudent, event: Event): boolean {
   return false;
 }
 
-function allocatePathToStudent(studentId: string, path: string[]): void {
+function allocatePathToStudents(studentIds: string[], path: string[]): void {
   path.forEach((item) => {
     const index = items.findIndex((event) => event._id === item);
-    items[index].studentIds.push(studentId);
+    items[index].studentIds.push(...studentIds);
   });
 }
 function dfs(
@@ -93,11 +101,11 @@ function dfs(
   edges: GraphNode<Item>[],
   requiredIds: string[],
   path: string[],
-  studentId: string
+  studentIds: string[]
 ): null | string[] {
   if (
     !requiredIds.includes(node.value.eventId) ||
-    node.value.groupSize < node.value.studentIds.length + 1
+    node.value.groupSize < node.value.studentIds.length + studentIds.length
   )
     return null; // Stop exploring if not required
 
@@ -105,7 +113,7 @@ function dfs(
   path.push(node.value._id);
 
   if (requiredIds.length === 0) {
-    allocatePathToStudent(studentId, path);
+    allocatePathToStudents(studentIds, path);
     return path; // Return the path when it's complete
   } else if (edges !== null) {
     for (let i = 0; i < edges.length; i++) {
@@ -114,7 +122,7 @@ function dfs(
         edges[i].edges,
         requiredIds,
         path.slice(),
-        studentId
+        studentIds
       );
       if (newPath !== null) {
         return newPath; // Return the first valid path found
@@ -125,20 +133,22 @@ function dfs(
 }
 
 function findItemsByStudentId(studentId: string, items: Item[]): Item[] {
-  return items.filter(
-    (item) => item.studentIds && item.studentIds.includes(studentId)
-  );
+  return items.filter((item) => item.studentIds.includes(studentId));
 }
 function main(items: Item[], students: IStudent[]): DirectedGraph<Item> {
-  const g = createGraph(items);
-  allocateItemsToStudents(g, students);
-  return g;
+  const graph = createGraph(items);
+  allocateItemsToStudents(graph, students);
+  return graph;
 }
+
 console.time();
 main(items, students);
 console.timeEnd();
-// findItemsByStudentId("person1", items).forEach((elemement) =>
-//   console.log(elemement.title, "test")
-// );
+// students.forEach((student) => {
+//   console.log("\n" + student._id + ": ");
+//   findItemsByStudentId(student._id, items).forEach((elemement) =>
+//     console.log(elemement.title, "test")
+//   );
+// });
 
 export { main };
