@@ -7,16 +7,13 @@ interface Project {
 const berlin: Project = {
   name: "Berlin 2024",
   requiredForall: [
-    "asdfjklasdföalsjf",
-    "hallo4",
-    "hallo2",
-    "solo3",
-    "hallo4",
-    "asdfjklasdföalsjf",
-    "hallo3",
-    "test1",
+    "group1",
+    "group2",
+    "group3",
     "solo2",
-    "solo1",
+    "solo3",
+    "solo4",
+    "solo5",
   ],
   relatedPolls: ["id0", "id1"],
 };
