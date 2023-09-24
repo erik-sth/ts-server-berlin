@@ -73,7 +73,6 @@ function allocateItemsToStudents(
   let stop = false;
   while (!pq.isEmpty()) {
     const student = pq.dequeue();
-    console.log(student);
     if (!student) return;
     const ids: string[] = [...requiredIds, ...getExtraIds(student._id)];
     stop = false;
