@@ -11,7 +11,6 @@ class PriorityQueue<T> {
 
     for (let i = 0; i < this.items.length; i++) {
       if (priority > this.items[i].priority) {
-        // Change the comparison to >
         this.items.splice(i, 0, queueElement);
         added = true;
         break;
@@ -43,6 +42,13 @@ class PriorityQueue<T> {
 
   size(): number {
     return this.items.length;
+  }
+  toArray(): T[] {
+    const result: T[] = [];
+    for (const item of this.items) {
+      result.push(item.element);
+    }
+    return result;
   }
 }
 
