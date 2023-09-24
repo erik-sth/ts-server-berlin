@@ -1,0 +1,36 @@
+poll options 
+free time every time with free time 
+
+
+
+if not found prioritaze the student and start again
+
+
+
+
+
+
+
+If I understand correctly, you have a situation where there are groups with a limited number of spots, and each student has specific item requirements. You want to allocate students
+ to groups while ensuring that students who need specific items get priority, even if it means they join a smaller group.
+
+In this case, a brute-force approach may not be the most efficient or effective solution.
+ Brute-forcing would explore all possible combinations, which might not guarantee the allocation you desire.
+
+A better approach might involve a combination of strategies:
+
+1. **Prioritization**: First, prioritize students based on their specific item requirements. Students with unique requirements should be allocated first to ensure they get what they need.
+
+2. **Group Selection**: For each student, iterate through the available groups and select the one that best matches their needs. This can involve selecting a group with the smallest number of students (if it meets the student's 
+requirements) or a group that already has some students with similar item requirements.
+
+3. **Backtracking**: If a student can't find a suitable group initially, you can backtrack and try alternative group allocations until a suitable allocation is found or all options are exhausted.
+
+4. **Optimization**: Consider implementing an optimization algorithm like a genetic algorithm to improve the allocation process based on specific constraints and objectives.
+
+5. **Heuristics**: Experiment with heuristics that allow for efficient grouping, such as clustering students with similar item requirements and then allocating these clusters to groups.
+
+6. **Constraint Satisfaction Problem (CSP)**: You can model this problem as a CSP and use constraint-solving techniques to find a suitable allocation.
+
+Keep in mind that this is a complex allocation problem, and the specific approach will depend on the exact constraints and objectives of your problem. It may require some experimentation and fine-tuning 
+to find the best allocation strategy. Additionally, as the problem scales, you may need to consider more advanced optimization algorithms to find efficient solutions.
