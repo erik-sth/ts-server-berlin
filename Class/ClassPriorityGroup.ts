@@ -10,7 +10,8 @@ class PriorityQueue<T> {
     let added = false;
 
     for (let i = 0; i < this.items.length; i++) {
-      if (priority < this.items[i].priority) {
+      if (priority > this.items[i].priority) {
+        // Change the comparison to >
         this.items.splice(i, 0, queueElement);
         added = true;
         break;
@@ -44,4 +45,5 @@ class PriorityQueue<T> {
     return this.items.length;
   }
 }
+
 export { PriorityQueue };
