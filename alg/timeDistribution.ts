@@ -20,26 +20,37 @@ let project: Project = {} as Project;
 let pq: PriorityQueue<Student>;
 let g: DirectedGraph<Item>;
 
+//O(n^2)
 function createGraph(): DirectedGraph<Item> {
-  const graph = new DirectedGraph<Item>();
+  const g = new DirectedGraph<Item>();
   items.forEach((element) => {
-    graph.addNode(element);
+    g.addNode(element);
   });
-  graph.nodes.forEach((node) => {
-    const nextAvailableEvent = nextAvailableEvents(node.value.endTime, items);
-    // logGraphRelations(node, nextAvailableEvent); // For "visualizing" the graph
+  g.nodes.forEach((node) => {
+    const nextAvailableEvent = getNextAvailableEventIds(
+      node.value.endTime,
+      items
+    );
+    // logGraphRelations(node, nextAvailableEvent); //for "visualizing" the graph
 
     if (nextAvailableEvent.length === 0) return;
 
     nextAvailableEvent.forEach((element) => {
-      const index = graph.nodes.findIndex((n) => n.value._id === element._id);
-      graph.addEdge(node, graph.nodes[index]);
+      const index = g.nodes.findIndex((node) => node.value._id === element._id);
+      g.addEdge(node, g.nodes[index]);
     });
   });
-  return graph;
+  return g;
 }
-
-function nextAvailableEvents(currentItemEndTime: Date, items: Item[]): Item[] {
+function logGraphRelations(node: GraphNode<Item>, nextAvailableEvent: Item[]) {
+  console.log("\n" + node.value._id + ": ");
+  nextAvailableEvent.forEach((item) => console.log(item._id));
+}
+//O(n)
+function getNextAvailableEventIds(
+  currentItemEndTime: Date,
+  items: Item[]
+): Item[] {
   const maxTimeDifferenceMs = 6 * 60 * 60 * 1000; // 5 hours in milliseconds
   const thirtyMinutesLaterTime = new Date(currentItemEndTime);
   thirtyMinutesLaterTime.setMinutes(thirtyMinutesLaterTime.getMinutes() + 30);
@@ -61,15 +72,16 @@ function nextAvailableEvents(currentItemEndTime: Date, items: Item[]): Item[] {
 
   return nextEvents;
 }
-
+//O(1)
 function isNextDay(date1: Date, date2: Date): boolean {
-  return (
-    date2.getDate() === date1.getDate() + 1 &&
-    date2.getMonth() === date1.getMonth() &&
-    date2.getFullYear() === date1.getFullYear()
-  );
-}
+  const dayDiff = date2.getDate() - date1.getDate();
+  const monthDiff = date2.getMonth() - date1.getMonth();
+  const yearDiff = date2.getFullYear() - date1.getFullYear();
 
+  // Check if the second date is one day ahead of the first date
+  return yearDiff === 0 && monthDiff === 0 && dayDiff === 1;
+}
+//O(N*M)
 function allocateItemsToStudents() {
   const requiredIds: Set<string> = new Set<string>(getRequiredIdsForEveryone());
   const entries = g.getNodesWithoutIngoingEdges();
@@ -84,7 +96,15 @@ function allocateItemsToStudents() {
 
     entries.forEach((entry) => {
       if (!stop) {
-        const path = dfs(entry, entry.edges, ids, [], student._id, Infinity);
+        const path = dfs(
+          entry,
+          entry.edges,
+          ids,
+          [],
+          student._id,
+          students.length * 2,
+          extraIds
+        );
         if (path !== null) {
           stop = true;
         }
@@ -92,33 +112,39 @@ function allocateItemsToStudents() {
     });
   }
 }
-
+//O(1)
 function getRequiredIdsForEveryone(): string[] {
   return project.requiredForAll;
 }
-
+//O(m*n)
 function getExtraIds(studentId: string): string[] {
   // Check if the result is cached
   if (extraIdsCache.has(studentId)) {
     return extraIdsCache.get(studentId)!;
   }
 
-  // Perform the computation as usual
-  const ids: string[] = [];
-  polls.forEach((poll) => {
-    poll.choices.forEach((choice) => {
-      if (choice.eventId !== "" && choice.studentIds.includes(studentId)) {
-        ids.push(choice.eventId);
-      }
-    });
-  });
+  // Filter relevant polls based on studentId
+  const relevantPolls = polls.filter((poll) =>
+    poll.choices.some(
+      (choice) => choice.studentIds.includes(studentId) && choice.eventId !== ""
+    )
+  );
+
+  // Extract eventIds from relevant choices
+  const ids: string[] = relevantPolls.reduce((result, poll) => {
+    const relevantChoices = poll.choices.filter(
+      (choice) => choice.studentIds.includes(studentId) && choice.eventId !== ""
+    );
+    result.push(...relevantChoices.map((choice) => choice.eventId));
+    return result;
+  }, [] as string[]);
 
   // Cache the result
   extraIdsCache.set(studentId, ids);
 
   return ids;
 }
-
+//O(N)
 function addPersonsWithSameIds(
   studentId: string,
   extraIds: string[],
@@ -127,7 +153,6 @@ function addPersonsWithSameIds(
   path: string[]
 ) {
   const students: string[] = [studentId];
-
   for (let i = 0; i < minExtraCourseSize; i++) {
     if (pq.isEmpty()) continue;
     const comparisonStudent = pq.peek();
@@ -143,45 +168,56 @@ function addPersonsWithSameIds(
 }
 
 function allocatePathToStudents(studentIds: string[], path: string[]): void {
-  path.forEach((item) => {
-    const index = items.findIndex((event) => event._id === item);
-    items[index].studentIds.push(...studentIds);
+  const itemMap: Record<string, Item> = {};
+
+  // Create a map for efficient item lookup
+  items.forEach((item) => {
+    itemMap[item._id] = item;
+  });
+
+  path.forEach((itemId) => {
+    const item = itemMap[itemId];
+    if (item) {
+      item.studentIds.push(...studentIds);
+    }
   });
 }
-
+// O(N)
 function dfs(
   node: GraphNode<Item>,
   edges: GraphNode<Item>[],
   requiredIds: Set<string>,
   path: string[],
   studentId: string,
-  minExtraCourseSize: number
+  minExtraCourseSize: number,
+  extraIds: string[]
 ): string[] | null {
+  // Create a copy of the requiredIds set to ensure it's independent for this branch
+  const requiredIdsCopy = new Set(requiredIds);
+
   const students = node.value.studentIds.length;
   const groupSize = node.value.groupSize;
-  const amountOfOpenSlots = groupSize - students + 1;
-  if (!requiredIds.has(node.value.eventId) || groupSize < students + 1)
+  const amountOfExtraOpenSlots = groupSize - students - 1;
+  if (!requiredIdsCopy.has(node.value.eventId) || amountOfExtraOpenSlots < 1) {
     return null;
+  }
+  const smallerNumber = Math.min(minExtraCourseSize, amountOfExtraOpenSlots);
 
-  if (minExtraCourseSize > amountOfOpenSlots)
-    minExtraCourseSize = amountOfOpenSlots;
-
-  requiredIds.delete(node.value.eventId);
   path.push(node.value._id);
-
-  if (requiredIds.size === 0) {
-    const extraIds = getExtraIds(studentId);
-    addPersonsWithSameIds(studentId, extraIds, minExtraCourseSize, pq, path);
+  requiredIdsCopy.delete(node.value.eventId);
+  if (requiredIdsCopy.size === 0) {
+    addPersonsWithSameIds(studentId, extraIds, smallerNumber, pq, path);
     return path; // Return the path when it's complete
   } else if (edges !== null) {
     for (let i = 0; i < edges.length; i++) {
       const newPath = dfs(
         edges[i],
         edges[i].edges,
-        requiredIds,
+        requiredIdsCopy, // Use the copied set
         path,
         studentId,
-        minExtraCourseSize
+        smallerNumber, // Pass the object containing minExtraCourseSize
+        extraIds
       );
       if (newPath !== null) return newPath;
     }
@@ -189,6 +225,7 @@ function dfs(
   return null; // Return null when no valid path is found
 }
 
+//O(N * log(N));
 function createPQ(): PriorityQueue<Student> {
   const pq = new PriorityQueue<Student>();
   students.forEach((student) => {
@@ -199,17 +236,24 @@ function createPQ(): PriorityQueue<Student> {
 }
 
 function arraysHaveSameValues(arr1: any[], arr2: any[]): boolean {
-  return (
-    arr1.length === arr2.length &&
-    arr1.every((value) => arr2.includes(value)) &&
-    arr2.every((value) => arr1.includes(value))
-  );
+  if (arr1.length !== arr2.length) {
+    return false; // If the lengths are different, they can't have the same values
+  }
+
+  const set1 = new Set(arr1);
+  for (const value of arr2) {
+    if (!set1.has(value)) {
+      return false; // If a value in arr2 is not in arr1, they are not the same
+    }
+  }
+
+  return true; // All values in arr2 are also in arr1
 }
 
 function findItemsByStudentId(studentId: string, items: Item[]): Item[] {
   return items.filter((item) => item.studentIds.includes(studentId));
 }
-
+// O(N^2 * M) estimated
 function main(
   items1: Item[],
   students1: Student[],
