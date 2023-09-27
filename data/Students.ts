@@ -1,4 +1,4 @@
-const students: IStudent[] = [
+const students: Student[] = [
   { _id: "person1" },
   { _id: "person2" },
   { _id: "person3" },
@@ -100,7 +100,7 @@ const students: IStudent[] = [
   { _id: "person99" },
   { _id: "person100" },
 ];
-interface IStudent {
+interface Student {
   _id: string;
 }
-export { IStudent, students };
+export { Student, students };

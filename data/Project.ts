@@ -18,4 +18,4 @@ const berlin: Project = {
   relatedPolls: ["id0", "id1"],
 };
 
-export { berlin };
+export { berlin, Project };

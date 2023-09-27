@@ -1,33 +1,44 @@
-import { PriorityQueue } from "../Class/ClassPriorityGroup";
+import { PriorityQueue } from "../Class/ClassPriorityQueue";
 import { DirectedGraph, GraphNode } from "../Class/Graph";
-import { items, Item } from "../data/Items";
-import { polls } from "../data/Polls";
-import { berlin } from "../data/Project";
-import { IStudent } from "../data/students";
+import { Item } from "../data/Items";
+import { PollQuestion } from "../data/Polls";
+import { Project } from "../data/Project";
+import { Student } from "../data/students";
 
-function createGraph(items: Item[]): DirectedGraph<Item> {
-  const g = new DirectedGraph<Item>();
+interface Test {
+  id: number;
+  path: string[];
+  students: string[];
+}
+
+const extraIdsCache = new Map<string, string[]>();
+
+let items: Item[] = [];
+let students: Student[] = [];
+let polls: PollQuestion[] = [];
+let project: Project = {} as Project;
+let pq: PriorityQueue<Student>;
+let g: DirectedGraph<Item>;
+
+function createGraph(): DirectedGraph<Item> {
+  const graph = new DirectedGraph<Item>();
   items.forEach((element) => {
-    g.addNode(element);
+    graph.addNode(element);
   });
-  g.nodes.forEach((node) => {
+  graph.nodes.forEach((node) => {
     const nextAvailableEvent = nextAvailableEvents(node.value.endTime, items);
-    // logGraphRelations(node, nextAvailableEvent); //for "visualizing" the graph
+    // logGraphRelations(node, nextAvailableEvent); // For "visualizing" the graph
 
     if (nextAvailableEvent.length === 0) return;
 
     nextAvailableEvent.forEach((element) => {
-      const index = g.nodes.findIndex((node) => node.value._id === element._id);
-      g.addEdge(node, g.nodes[index]);
+      const index = graph.nodes.findIndex((n) => n.value._id === element._id);
+      graph.addEdge(node, graph.nodes[index]);
     });
   });
-  return g;
+  return graph;
 }
 
-function logGraphRelations(node: GraphNode<Item>, nextAvailableEvent: Item[]) {
-  console.log("\n" + node.value._id + ": ");
-  nextAvailableEvent.forEach((item) => console.log(item._id));
-}
 function nextAvailableEvents(currentItemEndTime: Date, items: Item[]): Item[] {
   const maxTimeDifferenceMs = 6 * 60 * 60 * 1000; // 5 hours in milliseconds
   const thirtyMinutesLaterTime = new Date(currentItemEndTime);
@@ -51,11 +62,6 @@ function nextAvailableEvents(currentItemEndTime: Date, items: Item[]): Item[] {
   return nextEvents;
 }
 
-function calculateTravelTime() {
-  throw new Error("not implemented");
-}
-
-// Helper function to check if the date is the next day
 function isNextDay(date1: Date, date2: Date): boolean {
   return (
     date2.getDate() === date1.getDate() + 1 &&
@@ -64,21 +70,21 @@ function isNextDay(date1: Date, date2: Date): boolean {
   );
 }
 
-function allocateItemsToStudents(
-  graph: DirectedGraph<Item>,
-  pq: PriorityQueue<IStudent>
-) {
-  let requiredIds: string[] = getRequiredIdsforEveryone();
-  const entries = graph.getNodesWithoutIngoingEdges();
-  let stop = false;
+function allocateItemsToStudents() {
+  const requiredIds: Set<string> = new Set<string>(getRequiredIdsforEveryone());
+  const entries = g.getNodesWithoutIngoingEdges();
+
   while (!pq.isEmpty()) {
     const student = pq.dequeue();
     if (!student) return;
-    const ids: string[] = [...requiredIds, ...getExtraIds(student._id)];
-    stop = false;
+    const extraIds = getExtraIds(student._id);
+    const ids: Set<string> = new Set([...requiredIds, ...extraIds]);
+
+    let stop = false;
+
     entries.forEach((entrie) => {
       if (!stop) {
-        const path = dfs(entrie, entrie.edges, ids, [], [student._id]);
+        const path = dfs(entrie, entrie.edges, ids, [], student._id, Infinity);
         if (path !== null) {
           stop = true;
         }
@@ -86,20 +92,52 @@ function allocateItemsToStudents(
     });
   }
 }
+
 function getRequiredIdsforEveryone(): string[] {
-  return berlin.requiredForall;
+  return project.requiredForall;
 }
+
 function getExtraIds(studentId: string): string[] {
+  // Check if the result is cached
+  if (extraIdsCache.has(studentId)) {
+    return extraIdsCache.get(studentId)!;
+  }
+
+  // Perform the computation as usual
   const ids: string[] = [];
   polls.forEach((poll) => {
     poll.choices.forEach((choice) => {
-      if (choice.studentIds.includes(studentId)) ids.push(choice.eventId);
+      if (choice.eventId !== "" && choice.studentIds.includes(studentId))
+        ids.push(choice.eventId);
     });
   });
+
+  // Cache the result
+  extraIdsCache.set(studentId, ids);
+
   return ids;
 }
-function studentCanAttend(student: IStudent, event: Event): boolean {
-  return false;
+function addPersonsWithSameIds(
+  studentId: string,
+  extraIds: string[],
+  minExtraCourseSize: number,
+  pq: PriorityQueue<Student>,
+  path: string[]
+) {
+  const students: string[] = [studentId];
+
+  for (let i = 0; i < minExtraCourseSize; i++) {
+    if (pq.isEmpty()) continue;
+    const comparisonStudent = pq.peek();
+    const comparisonIds = getExtraIds(comparisonStudent!._id);
+    if (arraysHaveSameValues(comparisonIds, extraIds)) {
+      students.push(comparisonStudent!._id);
+      pq.dequeue();
+      continue;
+    }
+  }
+
+  allocatePathToStudents(students, path);
 }
 
 function allocatePathToStudents(studentIds: string[], path: string[]): void {
@@ -108,25 +146,30 @@ function allocatePathToStudents(studentIds: string[], path: string[]): void {
     items[index].studentIds.push(...studentIds);
   });
 }
+
 function dfs(
   node: GraphNode<Item>,
   edges: GraphNode<Item>[],
-  requiredIds: string[],
+  requiredIds: Set<string>,
   path: string[],
-  studentIds: string[]
-): null | string[] {
-  if (
-    !requiredIds.includes(node.value.eventId) ||
-    node.value.groupSize < node.value.studentIds.length + studentIds.length
-  ) {
+  studentId: string,
+  minExtraCourseSize: number
+): string[] | null {
+  const students = node.value.studentIds.length;
+  const groupSize = node.value.groupSize;
+  const amountOfOpenSlots = groupSize - students + 1;
+  if (!requiredIds.has(node.value.eventId) || groupSize < students + 1)
     return null;
-  }
 
-  requiredIds = requiredIds.filter((item) => item !== node.value.eventId);
+  if (minExtraCourseSize > amountOfOpenSlots)
+    minExtraCourseSize = amountOfOpenSlots;
+
+  requiredIds.delete(node.value.eventId);
   path.push(node.value._id);
 
-  if (requiredIds.length === 0) {
-    allocatePathToStudents(studentIds, path);
+  if (requiredIds.size === 0) {
+    const extraIds = getExtraIds(studentId);
+    addPersonsWithSameIds(studentId, extraIds, minExtraCourseSize, pq, path);
     return path; // Return the path when it's complete
   } else if (edges !== null) {
     for (let i = 0; i < edges.length; i++) {
@@ -134,33 +177,52 @@ function dfs(
         edges[i],
         edges[i].edges,
         requiredIds,
-        path.slice(),
-        studentIds
+        path,
+        studentId,
+        minExtraCourseSize
       );
-      if (newPath !== null) {
-        return newPath; // Return the first valid path found
-      }
+      if (newPath !== null) return newPath;
     }
   }
   return null; // Return null when no valid path is found
 }
-function createPQ(students: IStudent[]): PriorityQueue<IStudent> {
-  const pq = new PriorityQueue<IStudent>();
+
+function createPQ(): PriorityQueue<Student> {
+  const pq = new PriorityQueue<Student>();
   students.forEach((student) => {
-    const length = getExtraIds(student._id).length;
-    pq.enqueue(student, length);
+    const extraIds = getExtraIds(student._id);
+    pq.enqueue(student, extraIds.length);
   });
   return pq;
+}
+
+function arraysHaveSameValues(arr1: any[], arr2: any[]): boolean {
+  return (
+    arr1.length === arr2.length &&
+    arr1.every((value) => arr2.includes(value)) &&
+    arr2.every((value) => arr1.includes(value))
+  );
 }
 
 function findItemsByStudentId(studentId: string, items: Item[]): Item[] {
   return items.filter((item) => item.studentIds.includes(studentId));
 }
-function main(items: Item[], students: IStudent[]): DirectedGraph<Item> {
-  const pq = createPQ(students);
-  const graph = createGraph(items);
-  allocateItemsToStudents(graph, pq);
-  return graph;
+
+function main(
+  items1: Item[],
+  students1: Student[],
+  project1: Project,
+  polls1: PollQuestion[]
+): Item[] {
+  items = items1;
+  students = students1;
+  project = project1;
+  polls = polls1;
+
+  pq = createPQ();
+  g = createGraph();
+  allocateItemsToStudents();
+  return items1;
 }
 
 export { main, findItemsByStudentId };
