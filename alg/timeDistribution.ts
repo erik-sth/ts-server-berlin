@@ -3,7 +3,7 @@ import { DirectedGraph, GraphNode } from "../Class/Graph";
 import { Item } from "../data/Items";
 import { PollQuestion } from "../data/Polls";
 import { Project } from "../data/Project";
-import { Student } from "../data/students";
+import { Student } from "../data/Students";
 
 interface Test {
   id: number;
@@ -203,18 +203,22 @@ function dfs(
   }
   const smallerNumber = Math.min(minExtraCourseSize, amountOfExtraOpenSlots);
 
-  path.push(node.value._id);
-  requiredIdsCopy.delete(node.value.eventId);
-  if (requiredIdsCopy.size === 0) {
-    addPersonsWithSameIds(studentId, extraIds, smallerNumber, pq, path);
-    return path; // Return the path when it's complete
+  const updatedPath = [...path]; // Create a copy of the path for this branch
+  updatedPath.push(node.value._id);
+
+  const updatedRequiredIds = new Set(requiredIdsCopy); // Create a copy of requiredIds for this branch
+  updatedRequiredIds.delete(node.value.eventId);
+
+  if (updatedRequiredIds.size === 0) {
+    addPersonsWithSameIds(studentId, extraIds, smallerNumber, pq, updatedPath);
+    return updatedPath; // Return the path when it's complete
   } else if (edges !== null) {
     for (let i = 0; i < edges.length; i++) {
       const newPath = dfs(
         edges[i],
         edges[i].edges,
-        requiredIdsCopy, // Use the copied set
-        path,
+        updatedRequiredIds, // Use the copied set
+        updatedPath, // Use the copied path
         studentId,
         smallerNumber, // Pass the object containing minExtraCourseSize
         extraIds
@@ -222,6 +226,7 @@ function dfs(
       if (newPath !== null) return newPath;
     }
   }
+
   return null; // Return null when no valid path is found
 }
 
@@ -271,4 +276,4 @@ function main(
   return items1;
 }
 
-export { main, findItemsByStudentId };
+export { main, findItemsByStudentId, getExtraIds, getRequiredIdsForEveryone };
