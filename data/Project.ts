@@ -1,12 +1,12 @@
 interface Project {
   name: string;
-  requiredForall: string[];
+  requiredForAll: string[];
   relatedPolls: string[];
 }
 
 const berlin: Project = {
   name: "Berlin 2024",
-  requiredForall: [
+  requiredForAll: [
     "group1",
     "group2",
     "group3",

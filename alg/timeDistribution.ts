@@ -71,7 +71,7 @@ function isNextDay(date1: Date, date2: Date): boolean {
 }
 
 function allocateItemsToStudents() {
-  const requiredIds: Set<string> = new Set<string>(getRequiredIdsforEveryone());
+  const requiredIds: Set<string> = new Set<string>(getRequiredIdsForEveryone());
   const entries = g.getNodesWithoutIngoingEdges();
 
   while (!pq.isEmpty()) {
@@ -82,9 +82,9 @@ function allocateItemsToStudents() {
 
     let stop = false;
 
-    entries.forEach((entrie) => {
+    entries.forEach((entry) => {
       if (!stop) {
-        const path = dfs(entrie, entrie.edges, ids, [], student._id, Infinity);
+        const path = dfs(entry, entry.edges, ids, [], student._id, Infinity);
         if (path !== null) {
           stop = true;
         }
@@ -93,8 +93,8 @@ function allocateItemsToStudents() {
   }
 }
 
-function getRequiredIdsforEveryone(): string[] {
-  return project.requiredForall;
+function getRequiredIdsForEveryone(): string[] {
+  return project.requiredForAll;
 }
 
 function getExtraIds(studentId: string): string[] {
@@ -107,8 +107,9 @@ function getExtraIds(studentId: string): string[] {
   const ids: string[] = [];
   polls.forEach((poll) => {
     poll.choices.forEach((choice) => {
-      if (choice.eventId !== "" && choice.studentIds.includes(studentId))
+      if (choice.eventId !== "" && choice.studentIds.includes(studentId)) {
         ids.push(choice.eventId);
+      }
     });
   });
 
@@ -117,6 +118,7 @@ function getExtraIds(studentId: string): string[] {
 
   return ids;
 }
+
 function addPersonsWithSameIds(
   studentId: string,
   extraIds: string[],
