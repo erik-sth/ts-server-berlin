@@ -36,8 +36,8 @@ function createGraph(): DirectedGraph<Item> {
     if (nextAvailableEvent.length === 0) return;
 
     nextAvailableEvent.forEach((element) => {
-      const index = g.nodes.findIndex((node) => node.value._id === element._id);
-      g.addEdge(node, g.nodes[index]);
+      const nodeB = g.getNode(element);
+      if (nodeB) g.addEdge(node, nodeB);
     });
   });
   return g;

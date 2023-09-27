@@ -35,12 +35,16 @@ class DirectedGraph<T> {
   includes(item: T): boolean {
     return this.nodes.some((node) => node.value === item);
   }
+  getNode(value: T): GraphNode<T> | undefined {
+    return this.nodes.find((node) => node.value === value);
+  }
   removeEdge(from: GraphNode<T>, to: GraphNode<T>): void {
     const index = from.edges.indexOf(to);
     if (index !== -1) {
       from.edges.splice(index, 1);
     }
   }
+
   getNodesWithoutIngoingEdges(): GraphNode<T>[] {
     // Create a map to keep track of incoming edge counts for each node.
     const incomingEdgeCounts = new Map<GraphNode<T>, number>();
@@ -56,7 +60,6 @@ class DirectedGraph<T> {
         incomingEdgeCounts.set(edgeNode, incomingEdgeCounts.get(edgeNode)! + 1);
       });
     });
-
     // Filter nodes with no incoming edges.
     const nodesWithoutIngoingEdges = this.nodes.filter((node) => {
       return incomingEdgeCounts.get(node) === 0;
