@@ -1,6 +1,6 @@
-import { findItemsByStudentId, main } from "./alg/timeDistribution";
+import { findItemsByStudentId, main } from "./alg/TimeDistribution";
 import { items } from "./data/Items";
-import { students } from "./data/students";
+import { students } from "./data/Students";
 import { polls } from "./data/Polls";
 import { berlin } from "./data/Project";
 
@@ -11,7 +11,7 @@ console.timeEnd();
 // students.forEach((student) => {
 //   console.log("\n" + student._id + ": ");
 //   findItemsByStudentId(student._id, items).forEach((elemement) =>
-//     console.log(elemement.eventId.length)
+//     console.log(elemement._id, elemement.eventId)
 //   );
 // });
 students.forEach((student) => {
