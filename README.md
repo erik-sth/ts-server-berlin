@@ -81,6 +81,16 @@ To build the project, use:
 npm run build
 ```
 
+### Start
+
+To start the project, use:
+
+```bash
+npm start
+```
+
+
+
 ## Notes
 
 - Mention any assumptions, key strategies, and efficiency considerations.
