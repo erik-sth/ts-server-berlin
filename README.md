@@ -1,63 +1,109 @@
-Project README
-Introduction
-This project aims to efficiently allocate items to students based on specific criteria. It leverages a priority queue and a directed graph to optimize the allocation process.
+# Project Name
 
-Components
-Classes
-PriorityQueue: A priority queue implementation used to prioritize students based on the number of extra items they can accommodate.
+## Overview
 
-DirectedGraph: A directed graph implementation used to model relationships between items. Each node represents an item, and edges represent possible connections between items.
+This project facilitates efficient item allocation to students based on specified criteria. It utilizes a priority queue and a directed graph to optimize the allocation process, ensuring a streamlined and effective solution.
 
-GraphNode: Represents a node in the directed graph, corresponding to an item.
+## Table of Contents
 
-Data Structures
-Item: Represents an item that students can be allocated to. Contains information such as start time, end time, and a unique identifier.
+1. [Introduction](#introduction)
+2. [Components](#components)
+    - [Classes](#classes)
+    - [Data Structures](#data-structures)
+    - [Functions](#functions)
+3. [Usage](#usage)
+4. [Commands](#commands)
+    - [Installation](#installation)
+    - [Testing](#testing)
+    - [Build](#build)
+5. [Notes](#notes)
+6. [Getting Started](#getting-started)
+    - [Prerequisites](#prerequisites)
+    - [Installation](#installation-1)
+7. [Contributing](#contributing)
+8. [License](#license)
+9. [Acknowledgments](#acknowledgments)
 
-PollQuestion: Represents a poll question, used to gather information about students' preferences.
+## Introduction
 
-Project: Represents the overall project, including items required for all students.
+Provide a brief introduction to the project, its goals, and the problems it solves.
 
-Student: Represents a student, including information about the student and items they are already allocated.
+## Components
 
-Functions
-createGraph(): Builds a directed graph based on the items provided, creating edges between items that have a suitable time gap.
+### Classes
 
-getNextAvailableEventIds(currentItemEndTime, items): Returns a list of items that can be scheduled after the given item's end time.
+1. **PriorityQueue**: Implementation of a priority queue to prioritize students based on extra items they can accommodate.
+2. **DirectedGraph**: Graph representation for modeling relationships between items.
+3. **GraphNode**: Represents a node in the directed graph, corresponding to an item.
 
-allocateItemsToStudents(): Allocates items to students using a depth-first search approach, considering required and extra items.
+### Data Structures
 
-getRequiredIdsForEveryone(): Returns a list of item IDs required for all students.
+1. **Item**: Represents an item that students can be allocated to.
+2. **PollQuestion**: Represents a poll question to gather information about students' preferences.
+3. **Project**: Represents the overall project, including items required for all students.
+4. **Student**: Represents a student, including information about the student and items they are already allocated.
 
-getExtraIds(studentId): Retrieves a list of extra item IDs based on a student's preferences, caching the result for efficiency.
+### Functions
 
-addPersonsWithSameIds(studentId, extraIds, minExtraCourseSize, pq, path): Allocates paths to students with similar preferences.
+1. **createGraph()**: Builds a directed graph based on provided items, creating edges between items with suitable time gaps.
+2. **getNextAvailableEventIds(currentItemEndTime, items)**: Returns a list of items that can be scheduled after the given item's end time.
+3. **allocateItemsToStudents()**: Allocates items to students using a depth-first search approach, considering required and extra items.
+4. **getRequiredIdsForEveryone()**: Returns a list of item IDs required for all students.
+5. **getExtraIds(studentId)**: Retrieves a list of extra item IDs based on a student's preferences, caching the result for efficiency.
 
-dfs(node, edges, requiredIds, path, studentId, minExtraCourseSize, extraIds): Performs a depth-first search to find a suitable path for allocating items to a student.
+## Usage
 
-createPQ(): Creates a priority queue of students based on the number of extra items they can accommodate.
+Provide instructions on how to use the project. Include examples, if applicable.
 
-arraysHaveSameValues(arr1, arr2): Checks if two arrays have the same values, used for comparing extra item IDs.
+## Commands
 
-findItemsByStudentId(studentId, items): Finds items allocated to a specific student.
+### Installation
 
-main(items, students, project, polls): Main function orchestrating the allocation process. Initializes data structures, creates a priority queue, builds the graph, and allocates items to students.
+Run the following command to install the project dependencies:
 
-Usage
-To use the project, follow these steps:
+```bash
+npm install
+```
 
-Import the necessary classes and data structures.
+### Testing
 
-Call the main function with the relevant data (items, students, project, polls).
+Execute the following command to run tests:
 
-Access the allocated items using the findItemsByStudentId function or retrieve extra item IDs using getExtraIds.
+```bash
+npm test
+```
 
-Customize the project as needed, adjusting parameters such as time gaps and required items.
+### Build
 
-Notes
-The project assumes a time-based allocation strategy, considering time gaps between items.
+To build the project, use:
 
-Efficiency is a key focus, with caching mechanisms and priority queues used to optimize the allocation process.
+```bash
+npm run build
+```
 
-Ensure that the input data adheres to the expected structures and formats for proper functioning.
+## Notes
 
-Feel free to explore and modify the project based on specific requirements and use cases.
+- Mention any assumptions, key strategies, and efficiency considerations.
+- Highlight any customization options or parameters that users might want to adjust.
+
+## Getting Started
+
+### Prerequisites
+
+List any prerequisites or dependencies that users need to have installed.
+
+### Installation
+
+Provide step-by-step instructions on how to install and set up the project.
+
+## Contributing
+
+Outline guidelines for contributing to the project. Include information on how to submit issues, suggest improvements, and propose new features.
+
+## License
+
+Specify the license under which the project is distributed.
+
+## Acknowledgments
+
+Give credit to any third-party libraries, resources, or inspirations used in the project.
