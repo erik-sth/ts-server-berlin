@@ -1,9 +1,9 @@
 import { PriorityQueue } from "../Class/ClassPriorityQueue";
 import { DirectedGraph, GraphNode } from "../Class/Graph";
-import { Item } from "../data/Items";
-import { PollQuestion } from "../data/Polls";
-import { Project } from "../data/Project";
-import { Student } from "../data/Students";
+import Project from "../types/Project";
+import Student from "../types/Student";
+import Item from "../types/Item";
+import PollQuestion from "../types/Polls";
 
 interface Test {
   id: number;
@@ -160,8 +160,7 @@ function addPersonsWithSameIds(
     if (arraysHaveSameValues(comparisonIds, extraIds)) {
       students.push(comparisonStudent!._id);
       pq.dequeue();
-      continue;
-    }
+    } else break;
   }
 
   allocatePathToStudents(students, path);

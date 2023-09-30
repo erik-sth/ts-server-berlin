@@ -1,15 +1,4 @@
-interface PollChoice {
-  _id: string;
-  text: string;
-  eventId: string;
-  studentIds: string[];
-}
-
-interface PollQuestion {
-  _id: string;
-  text: string;
-  choices: PollChoice[];
-}
+import PollQuestion from "../types/Polls";
 
 const polls: PollQuestion[] = [
   {
@@ -87,4 +76,4 @@ const polls: PollQuestion[] = [
   },
 ];
 
-export { polls, PollQuestion, PollChoice };
+export { polls };

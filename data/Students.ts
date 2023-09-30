@@ -1,3 +1,5 @@
+import Student from "../types/Student";
+
 const students: Student[] = [
   { _id: "person1" },
   { _id: "person2" },
@@ -100,7 +102,5 @@ const students: Student[] = [
   { _id: "person99" },
   { _id: "person100" },
 ];
-interface Student {
-  _id: string;
-}
-export { Student, students };
+
+export { students };

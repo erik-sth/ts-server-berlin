@@ -1,12 +1,5 @@
-interface Item {
-  _id: string;
-  title: string;
-  startTime: Date;
-  endTime: Date;
-  eventId: string;
-  studentIds: string[];
-  groupSize: number;
-}
+import Item from "../types/Item";
+
 const items: Item[] = [
   {
     _id: "id1",
@@ -119,4 +112,4 @@ const items: Item[] = [
   },
 ];
 
-export { Item, items };
+export { items };

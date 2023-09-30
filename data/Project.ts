@@ -1,8 +1,4 @@
-interface Project {
-  name: string;
-  requiredForAll: string[];
-  relatedPolls: string[];
-}
+import { Project } from "../test/data";
 
 const berlin: Project = {
   name: "Berlin 2024",
@@ -18,4 +14,4 @@ const berlin: Project = {
   relatedPolls: ["id0", "id1"],
 };
 
-export { berlin, Project };
+export { berlin };

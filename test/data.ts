@@ -1,12 +1,7 @@
-interface Item {
-  _id: string;
-  title: string;
-  startTime: Date;
-  endTime: Date;
-  eventId: string;
-  studentIds: string[];
-  groupSize: number;
-}
+import PollQuestion from "../types/Polls";
+import Student from "../types/Student";
+import Item from "../types/Item";
+
 const items: Item[] = [
   {
     _id: "id1",
@@ -119,19 +114,7 @@ const items: Item[] = [
   },
 ];
 
-export { Item, items };
-interface PollChoice {
-  _id: string;
-  text: string;
-  eventId: string;
-  studentIds: string[];
-}
-
-interface PollQuestion {
-  _id: string;
-  text: string;
-  choices: PollChoice[];
-}
+export { items };
 
 const polls: PollQuestion[] = [
   {
@@ -209,7 +192,7 @@ const polls: PollQuestion[] = [
   },
 ];
 
-export { polls, PollQuestion, PollChoice };
+export { polls };
 interface Project {
   name: string;
   requiredForAll: string[];
@@ -333,7 +316,5 @@ const students: Student[] = [
   { _id: "person99" },
   { _id: "person100" },
 ];
-interface Student {
-  _id: string;
-}
-export { Student, students };
+
+export { students };
