@@ -16,6 +16,7 @@ This project facilitates efficient item allocation to students based on specifie
     - [Installation](#installation)
     - [Testing](#testing)
     - [Build](#build)
+    - [Start](#start)
 5. [Notes](#notes)
 6. [Getting Started](#getting-started)
     - [Prerequisites](#prerequisites)
