@@ -1,11 +1,11 @@
-import { main } from "./alg/TimeDistribution";
+import { findItemsByStudentId, main } from "./test";
 import { items } from "./data/Items";
 import { students } from "./data/Students";
 import { polls } from "./data/Polls";
 import { berlin } from "./data/Projects";
 
 console.time();
-main();
+main(items, students, berlin, polls);
 console.timeEnd();
 
 // students.forEach((student) => {

@@ -3,7 +3,7 @@ import {
   getExtraIds,
   getRequiredIdsForEveryone,
   main,
-} from "../alg/TimeDistribution";
+} from "../test";
 import { items, polls, students, project } from "./data";
 
 describe("main function", () => {
