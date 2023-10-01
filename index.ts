@@ -1,4 +1,4 @@
-import { findItemsByStudentId, main } from "./TimeDisribution";
+import { findItemsByStudentId, main } from "./alg/TimeDisribution";
 import { items } from "./data/Items";
 import { students } from "./data/Students";
 import { polls } from "./data/Polls";

@@ -1,9 +1,9 @@
-import { PriorityQueue } from "./Class/ClassPriorityQueue";
-import { DirectedGraph, GraphNode } from "./Class/Graph";
-import Project from "./types/Project";
-import Student from "./types/Student";
-import Item from "./types/Item";
-import PollQuestion from "./types/Polls";
+import { PriorityQueue } from "../Class/ClassPriorityQueue";
+import { DirectedGraph, GraphNode } from "../Class/Graph";
+import Project from "../types/Project";
+import Student from "../types/Student";
+import Item from "../types/Item";
+import PollQuestion from "../types/Polls";
 
 const extraIdsCache = new Map<string, string[]>();
 
