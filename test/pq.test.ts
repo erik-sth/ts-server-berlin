@@ -1,4 +1,4 @@
-import { PriorityQueue } from "../Class/ClassPriorityQueue";
+import { PriorityQueue } from "../Class/PriorityQueue";
 
 describe("PriorityQueue", () => {
   it("should enqueue elements with proper priority and dequeue in correct order", () => {

@@ -1,4 +1,4 @@
-import { PriorityQueue } from "../Class/ClassPriorityQueue";
+import { PriorityQueue } from "../Class/PriorityQueue";
 import { DirectedGraph, GraphNode } from "../Class/Graph";
 import Project from "../types/Project";
 import Student from "../types/Student";
