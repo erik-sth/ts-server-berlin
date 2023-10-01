@@ -92,7 +92,6 @@ function allocateItemsToStudents() {
       if (!stop) {
         const path = dfs(
           entry,
-          entry.edges,
           ids,
           [],
           student._id,
@@ -178,15 +177,14 @@ function allocatePathToStudents(studentIds: string[], path: string[]): void {
 // O(N)
 function dfs(
   node: GraphNode<Item>,
-  edges: GraphNode<Item>[],
-  requiredIds: Set<string>,
+  remainingIds: Set<string>,
   path: string[],
   studentId: string,
   minExtraCourseSize: number,
-  extraIds: string[]
+  extraIds: string[] //which ids are seperate from the others
 ): string[] | null {
   // Create a copy of the requiredIds set to ensure it's independent for this branch
-  const requiredIdsCopy = new Set(requiredIds);
+  const requiredIdsCopy = new Set(remainingIds);
 
   const students = node.value.studentIds.length;
   const groupSize = node.value.groupSize;
@@ -196,22 +194,19 @@ function dfs(
   }
   const smallerNumber = Math.min(minExtraCourseSize, amountOfExtraOpenSlots);
 
-  const updatedPath = [...path]; // Create a copy of the path for this branch
-  updatedPath.push(node.value._id);
+  path.push(node.value._id);
 
-  const updatedRequiredIds = new Set(requiredIdsCopy); // Create a copy of requiredIds for this branch
-  updatedRequiredIds.delete(node.value.eventId);
+  remainingIds.delete(node.value.eventId);
 
-  if (updatedRequiredIds.size === 0) {
-    addPersonsWithSameIds(studentId, extraIds, smallerNumber, pq, updatedPath);
-    return updatedPath; // Return the path when it's complete
-  } else if (edges !== null) {
-    for (let i = 0; i < edges.length; i++) {
+  if (remainingIds.size === 0) {
+    addPersonsWithSameIds(studentId, extraIds, smallerNumber, pq, path);
+    return path; // Return the path when it's complete
+  } else if (node.edges !== null) {
+    for (let i = 0; i < node.edges.length; i++) {
       const newPath = dfs(
-        edges[i],
-        edges[i].edges,
-        updatedRequiredIds, // Use the copied set
-        updatedPath, // Use the copied path
+        node.edges[i],
+        remainingIds, // Use the copied set
+        path, // Use the copied path
         studentId,
         smallerNumber, // Pass the object containing minExtraCourseSize
         extraIds
@@ -219,7 +214,8 @@ function dfs(
       if (newPath !== null) return newPath;
     }
   }
-
+  remainingIds.add(node.value.eventId);
+  path.pop();
   return null; // Return null when no valid path is found
 }
 
