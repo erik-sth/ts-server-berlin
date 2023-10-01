@@ -5,12 +5,6 @@ import Student from "../types/Student";
 import Item from "../types/Item";
 import PollQuestion from "../types/Polls";
 
-interface Test {
-  id: number;
-  path: string[];
-  students: string[];
-}
-
 const extraIdsCache = new Map<string, string[]>();
 
 let items: Item[] = [];

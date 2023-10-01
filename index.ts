@@ -14,8 +14,8 @@ console.timeEnd();
 //     console.log(elemement._id, elemement.eventId)
 //   );
 // });
-students.forEach((student) => {
-  const length = findItemsByStudentId(student._id, items).length;
-  if (length != 0) return;
-  console.log("\n" + student._id + ": " + length);
-});
+// students.forEach((student) => {
+//   const length = findItemsByStudentId(student._id, items).length;
+//   if (length != 0) return;
+//   console.log("\n" + student._id + ": " + length);
+// });

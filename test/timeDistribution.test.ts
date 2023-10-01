@@ -18,6 +18,20 @@ describe("main function", () => {
       expect(itemsForStudent.length).toBe(expectedItemCount);
     });
   });
+  it("should have the same ids", () => {
+    const result = main(items, students, project, polls);
+    const eventIds = getRequiredIdsForEveryone();
+    students.forEach((student) => {
+      const studentId = student._id;
+      const studentResults = findItemsByStudentId(studentId, result);
+      const ids = [];
+      studentResults.forEach((item) => ids.push(item.eventId));
+      const expectedItemCount = [...eventIds, ...getExtraIds(student._id)];
+      // Check if the number of allocated items matches the expected count
+      expect(ids).toEqual(expect.arrayContaining(expectedItemCount));
+    });
+  });
+
   it("checking for overlapping and group exceeding", () => {
     const result = main(items, students, project, polls);
     const idLength = getRequiredIdsForEveryone().length;
