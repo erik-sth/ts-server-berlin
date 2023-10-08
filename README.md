@@ -43,7 +43,7 @@ Provide a brief introduction to the project, its goals, and the problems it solv
 2. **PollQuestion**: Represents a poll question to gather information about students' preferences.
 3. **Project**: Represents the overall project, including items required for all students.
 4. **Student**: Represents a student, including information about the student and items they are already allocated.
-
+5. **Groups**: Represent every individual id groups with all available paths with their students.
 ### Functions
 
 1. **createGraph()**: Builds a directed graph based on provided items, creating edges between items with suitable time gaps.
