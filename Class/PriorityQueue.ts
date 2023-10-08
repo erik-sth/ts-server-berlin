@@ -1,13 +1,11 @@
 class PriorityQueue<T> {
-  private items: { element: T; priority: number }[];
+  private items: { element: T; priority: number }[] = [];
 
-  constructor() {
-    this.items = [];
-  }
+  constructor() {}
 
-  enqueue(element: T, priority: number) {
-    const queueElement = { element, priority };
-    this.items.push(queueElement);
+  enqueue(element: T, priority: number): void {
+    const QUEUE_ELEMENT = { element, priority };
+    this.items.push(QUEUE_ELEMENT);
     this.heapifyUp();
   }
 
@@ -15,14 +13,17 @@ class PriorityQueue<T> {
     if (this.isEmpty()) {
       return undefined;
     }
-    const root = this.items[0];
+
+    const ROOT = this.items[0];
+
     if (this.items.length === 1) {
       this.items.pop();
     } else {
       this.items[0] = this.items.pop()!;
       this.heapifyDown();
     }
-    return root.element;
+
+    return ROOT.element;
   }
 
   peek(): T | undefined {
@@ -55,10 +56,12 @@ class PriorityQueue<T> {
     return this.items.map((item) => item.element);
   }
 
-  private heapifyUp() {
+  private heapifyUp(): void {
     let currentIndex = this.items.length - 1;
+
     while (currentIndex > 0) {
       const parentIndex = Math.floor((currentIndex - 1) / 2);
+
       if (
         this.items[currentIndex].priority < this.items[parentIndex].priority
       ) {
@@ -70,9 +73,10 @@ class PriorityQueue<T> {
     }
   }
 
-  private heapifyDown() {
+  private heapifyDown(): void {
     let currentIndex = 0;
     const length = this.items.length;
+
     while (true) {
       const leftChildIndex = 2 * currentIndex + 1;
       const rightChildIndex = 2 * currentIndex + 2;
@@ -103,7 +107,7 @@ class PriorityQueue<T> {
     }
   }
 
-  private swap(index1: number, index2: number) {
+  private swap(index1: number, index2: number): void {
     [this.items[index1], this.items[index2]] = [
       this.items[index2],
       this.items[index1],
