@@ -17,7 +17,7 @@ const items: Item[] = [
     endTime: new Date(2023, 8, 16, 10, 0),
     eventId: "group2",
     studentIds: [],
-    groupSize: 100,
+    groupSize: 2,
   },
   {
     _id: "id3",
@@ -44,7 +44,7 @@ const items: Item[] = [
     endTime: new Date(2023, 8, 17, 15, 30),
     eventId: "group2",
     studentIds: [],
-    groupSize: 100,
+    groupSize: 98,
   },
   {
     _id: "id6",

@@ -3,48 +3,52 @@ import {
   getExtraIds,
   getRequiredIdsForEveryone,
   main,
-} from "../alg/TimeDisribution";
+} from "../alg/TimeDistribution";
 import { items, polls, students, project } from "./data";
 
-describe("main function", () => {
-  it("check size", () => {
-    const result = main(items, students, project, polls);
-    const idLength = getRequiredIdsForEveryone().length;
+describe("Time Distribution Algorithm", () => {
+  const allocationResult = main(items, students, project, polls);
+
+  it("should allocate the correct number of items to each student", () => {
+    const requiredIdsLength = getRequiredIdsForEveryone().length;
+
     students.forEach((student) => {
       const studentId = student._id;
-      const itemsForStudent = findItemsByStudentId(studentId, result);
-      const expectedItemCount = idLength + getExtraIds(student._id).length;
-      // Check if the number of allocated items matches the expected count
+      const itemsForStudent = findItemsByStudentId(studentId, allocationResult);
+      const expectedItemCount =
+        requiredIdsLength + getExtraIds(studentId).length;
+
       expect(itemsForStudent.length).toBe(expectedItemCount);
     });
   });
-  it("should have the same ids", () => {
-    const result = main(items, students, project, polls);
-    const eventIds = getRequiredIdsForEveryone();
+
+  it("should allocate items with the correct IDs to each student", () => {
     students.forEach((student) => {
       const studentId = student._id;
-      const studentResults = findItemsByStudentId(studentId, result);
-      const ids = [];
-      studentResults.forEach((item) => ids.push(item.eventId));
-      const expectedItemCount = [...eventIds, ...getExtraIds(student._id)];
-      // Check if the number of allocated items matches the expected count
-      expect(ids).toEqual(expect.arrayContaining(expectedItemCount));
+      const itemsForStudent = findItemsByStudentId(studentId, allocationResult);
+      const expectedItemIds = [
+        ...getRequiredIdsForEveryone(),
+        ...getExtraIds(studentId),
+      ];
+
+      expect(itemsForStudent.map((item) => item.eventId)).toEqual(
+        expect.arrayContaining(expectedItemIds)
+      );
+    });
+  });
+  it("should have only the allowed group size of students", () => {
+    items.forEach((item) => {
+      expect(item.studentIds.length).toBeLessThanOrEqual(item.groupSize);
     });
   });
 
-  it("checking for overlapping and group exceeding", () => {
-    const result = main(items, students, project, polls);
-    const idLength = getRequiredIdsForEveryone().length;
-
+  it("should not have overlapping events and not exceed group size limits", () => {
     students.forEach((student) => {
       const studentId = student._id;
-      const itemsForStudent = findItemsByStudentId(studentId, result);
-      const expectedItemCount = idLength + getExtraIds(studentId).length;
+      const itemsForStudent = findItemsByStudentId(studentId, allocationResult);
 
-      // Check if the number of allocated items matches the expected count
-      expect(itemsForStudent.length).toBe(expectedItemCount);
+      expect(itemsForStudent.length).toBeGreaterThan(0);
 
-      // Check for overlapping events in the student's schedule
       for (let i = 0; i < itemsForStudent.length; i++) {
         for (let j = i + 1; j < itemsForStudent.length; j++) {
           const itemA = itemsForStudent[i];
@@ -52,26 +56,22 @@ describe("main function", () => {
           const overlap =
             itemA.startTime < itemB.endTime && itemA.endTime > itemB.startTime;
 
-          // If there is an overlap, fail the test
           expect(overlap).toBe(false);
         }
-      }
 
-      // Check that the group size is not exceeded for each event
-      itemsForStudent.forEach((item) => {
         const groupEvents = itemsForStudent.filter(
           (otherItem) =>
-            otherItem.eventId === item.eventId && otherItem !== item
+            otherItem.eventId === itemsForStudent[i].eventId &&
+            otherItem !== itemsForStudent[i]
         );
-        const groupSize = item.groupSize;
+        const groupSize = itemsForStudent[i].groupSize;
         const studentsInGroup = groupEvents.reduce(
           (total, groupEvent) => total + groupEvent.studentIds.length,
           0
         );
 
-        // Ensure that the number of students in the group does not exceed the group size
         expect(studentsInGroup).toBeLessThanOrEqual(groupSize);
-      });
+      }
     });
   });
 });
