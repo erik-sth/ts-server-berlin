@@ -19,36 +19,41 @@ interface Path {
   groupId: number;
   path: string[];
   maxSize: number;
-  valueForDistrbutingOfStudents: number;
+  valueForDistributingOfStudents: number;
 }
 
 //O(1)
 function getRequiredIdsForEveryone(): string[] {
   return project.requiredForAll;
 }
+
+const EMPTY_STRING = "";
 //O(m*n) m = amount of polls n = amount of choiches
 function getExtraIds(studentId: string): string[] {
   if (extraIdsCache.has(studentId)) {
     return extraIdsCache.get(studentId)!;
   }
 
-  const relevantPolls = polls.filter((poll) =>
-    poll.choices.some(
-      (choice) => choice.studentIds.includes(studentId) && choice.eventId !== ""
-    )
-  );
-
-  const ids: string[] = relevantPolls.flatMap((poll) =>
-    poll.choices
-      .filter(
+  const relevantPolls = polls
+    .filter((poll) =>
+      poll.choices.some(
         (choice) =>
-          choice.studentIds.includes(studentId) && choice.eventId !== ""
+          choice.studentIds.includes(studentId) &&
+          choice.eventId !== EMPTY_STRING
       )
-      .map((choice) => choice.eventId)
-  );
+    )
+    .flatMap((poll) =>
+      poll.choices
+        .filter(
+          (choice) =>
+            choice.studentIds.includes(studentId) &&
+            choice.eventId !== EMPTY_STRING
+        )
+        .map((choice) => choice.eventId)
+    );
 
-  extraIdsCache.set(studentId, ids);
-  return ids;
+  extraIdsCache.set(studentId, relevantPolls);
+  return relevantPolls;
 }
 
 function dfs(
@@ -72,7 +77,7 @@ function dfs(
       groupId,
       path: newPath,
       maxSize: getSmallestGroupSize(newPath),
-      valueForDistrbutingOfStudents: 0,
+      valueForDistributingOfStudents: 0,
     });
   } else if (node.edges !== null) {
     node.edges.forEach((edge) =>
@@ -83,15 +88,7 @@ function dfs(
   remainingIds.add(node.value.eventId);
   return null;
 }
-function getSmallesGroupSize(path: string[]): number {
-  let smallest = Infinity;
-  items.forEach((item) => {
-    if (path.includes(item._id)) {
-      smallest = Math.min(smallest, item.groupSize);
-    }
-  });
-  return smallest;
-}
+
 function getSmallestGroupSize(path: string[]): number {
   return Math.min(
     ...items
@@ -125,13 +122,13 @@ function distributeStudentsToPaths(pq: PriorityQueue<Group>): void {
     paths.forEach((path) => {
       if (path.groupId === group.id && amountStudentsRemaining > 0) {
         const min = Math.min(
-          path.maxSize - path.valueForDistrbutingOfStudents,
+          path.maxSize - path.valueForDistributingOfStudents,
           amountStudentsRemaining
         );
         amountStudentsRemaining -= min;
-        path.valueForDistrbutingOfStudents
-          ? (path.valueForDistrbutingOfStudents = min)
-          : (path.valueForDistrbutingOfStudents += min);
+        path.valueForDistributingOfStudents
+          ? (path.valueForDistributingOfStudents = min)
+          : (path.valueForDistributingOfStudents += min);
       }
     });
   }
@@ -143,40 +140,43 @@ function redistribute(
   excessStudents: number,
   record: Record<string, number>
 ) {
-  // paths.forEach(pathItem =>{
-  //   if(!pathItem.path.includes(failedId)){
-
-  //   }
-  // })
   paths.forEach((path) => {
-    const ausweichIds: Path[] = [];
-    const failedPaths: Path[] = [];
-    paths.forEach((pathItem) => {
-      if (pathItem.groupId === path.groupId) {
-        if (!pathItem.path.includes(failedId)) {
-          ausweichIds.push(pathItem);
-        } else failedPaths.push(pathItem);
-      }
-    });
+    const alternativePaths: Path[] = paths.filter(
+      (pathItem) =>
+        pathItem.groupId === path.groupId && !pathItem.path.includes(failedId)
+    );
 
-    if (failedPaths.length !== 0) {
-      // failedPaths.sort(({})=>)
-      for (let i = 0; i < failedPaths.length; i++) {
+    const failedGroupPaths: Path[] = paths.filter(
+      (pathItem) =>
+        pathItem.groupId === path.groupId && pathItem.path.includes(failedId)
+    );
+
+    if (failedGroupPaths.length !== 0) {
+      failedGroupPaths.sort(
+        (a, b) =>
+          b.valueForDistributingOfStudents - a.valueForDistributingOfStudents
+      );
+
+      failedGroupPaths.forEach((failedPath) => {
         const removeCount =
-          failedPaths[i].valueForDistrbutingOfStudents - excessStudents;
+          failedPath.valueForDistributingOfStudents - excessStudents;
 
-        failedPaths[i].valueForDistrbutingOfStudents = removeCount;
-        let j = 0;
-        while (excessStudents > 0) {
-          ausweichIds[j].valueForDistrbutingOfStudents += excessStudents;
-          excessStudents -= excessStudents;
-        }
-      }
+        failedPath.valueForDistributingOfStudents = removeCount;
+
+        // Accumulate excess students without modifying it directly
+        let remainingExcessStudentsCount = excessStudents;
+
+        alternativePaths.forEach((alternativePath) => {
+          alternativePath.valueForDistributingOfStudents +=
+            remainingExcessStudentsCount;
+          remainingExcessStudentsCount = 0; // Ensure it doesn't go below 0
+        });
+
+        // Update the original excessStudents value
+        excessStudents = remainingExcessStudentsCount;
+      });
     }
   });
-
-  //find every path with item id
-  //find a group with the most extra paths that are not related with this and the most open places
 
   checkForDuplicates(paths, items);
 }
@@ -187,9 +187,9 @@ function allocateItemsToStudents(
   groups: Group[]
 ): void {
   paths.forEach((path) => {
-    if (path.valueForDistrbutingOfStudents !== 0) {
+    if (path.valueForDistributingOfStudents !== 0) {
       const groupId = path.groupId;
-      const studentsCount = path.valueForDistrbutingOfStudents;
+      const studentsCount = path.valueForDistributingOfStudents;
 
       const group = groups.find((group) => groupId === group.id);
 
@@ -215,7 +215,7 @@ function createRecord(paths: Path[]): Record<string, number> {
   paths.forEach((path) => {
     path.path.forEach((pathItem) => {
       record[pathItem] =
-        (record[pathItem] || 0) + path.valueForDistrbutingOfStudents;
+        (record[pathItem] || 0) + path.valueForDistributingOfStudents;
     });
   });
   return record;
