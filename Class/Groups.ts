@@ -1,15 +1,15 @@
 import { arraysHaveSameValues } from "../utils/array";
+
 interface Group {
   id: number;
   path: string[];
   studentIds: string[];
 }
-class Groups {
-  groups: Group[];
 
-  constructor() {
-    this.groups = [];
-  }
+class Groups {
+  private groups: Group[] = [];
+
+  constructor() {}
 
   add(path: string[], studentId: string): void {
     const existingGroup = this.groups.find((group) =>
@@ -27,7 +27,7 @@ class Groups {
     }
   }
 
-  getAll() {
+  getAll(): Group[] {
     return this.groups;
   }
 

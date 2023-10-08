@@ -7,7 +7,7 @@ import createGraph from "./CreateGraph";
 import { Group, Groups } from "../Class/Groups";
 import { PriorityQueue } from "../Class/PriorityQueue";
 
-const extraIdsCache = new Map<string, string[]>();
+const EXTRA_IDS_CACHE = new Map<string, string[]>();
 
 let items: Item[] = [];
 let students: Student[] = [];
@@ -22,16 +22,16 @@ interface Path {
   valueForDistributingOfStudents: number;
 }
 
-//O(1)
+// O(1)
 function getRequiredIdsForEveryone(): string[] {
   return project.requiredForAll;
 }
 
 const EMPTY_STRING = "";
-//O(m*n) m = amount of polls n = amount of choiches
+// O(m*n) m = amount of polls n = amount of choices
 function getExtraIds(studentId: string): string[] {
-  if (extraIdsCache.has(studentId)) {
-    return extraIdsCache.get(studentId)!;
+  if (EXTRA_IDS_CACHE.has(studentId)) {
+    return EXTRA_IDS_CACHE.get(studentId)!;
   }
 
   const relevantPolls = polls
@@ -52,7 +52,7 @@ function getExtraIds(studentId: string): string[] {
         .map((choice) => choice.eventId)
     );
 
-  extraIdsCache.set(studentId, relevantPolls);
+  EXTRA_IDS_CACHE.set(studentId, relevantPolls);
   return relevantPolls;
 }
 
@@ -63,9 +63,9 @@ function dfs(
   extraIds: string[], // which ids are separate from the others
   groupId: number
 ): string[] | null {
-  const requiredIdsCopy = new Set(remainingIds);
+  const REQUIRED_IDS_COPY = new Set(remainingIds);
 
-  if (!requiredIdsCopy.has(node.value.eventId)) {
+  if (!REQUIRED_IDS_COPY.has(node.value.eventId)) {
     return null;
   }
 
@@ -97,38 +97,40 @@ function getSmallestGroupSize(path: string[]): number {
   );
 }
 function buildGroupsWithSamePaths() {
-  const groups = new Groups();
+  const GROUPS = new Groups();
   students.forEach((student) => {
-    groups.add(getExtraIds(student._id), student._id);
+    GROUPS.add(getExtraIds(student._id), student._id);
   });
-  return groups.getAll();
+  return GROUPS.getAll();
 }
 
 function findAllPathsForEachGroup(groups: Group[]) {
-  const requiredIds: Set<string> = new Set<string>(getRequiredIdsForEveryone());
-  const entries = g.getNodesWithoutIngoingEdges();
+  const REQUIRED_IDS: Set<string> = new Set<string>(
+    getRequiredIdsForEveryone()
+  );
+  const ENTRIES = g.getNodesWithoutIngoingEdges();
   groups.forEach((group) => {
-    const ids: Set<string> = new Set([...requiredIds, ...group.path]);
-    entries.forEach((entry) => {
-      dfs(entry, ids, [], group.path, group.id);
+    const IDS: Set<string> = new Set([...REQUIRED_IDS, ...group.path]);
+    ENTRIES.forEach((entry) => {
+      dfs(entry, IDS, [], group.path, group.id);
     });
   });
 }
 
 function distributeStudentsToPaths(pq: PriorityQueue<Group>): void {
   while (!pq.isEmpty()) {
-    const group = pq.dequeue();
-    let amountStudentsRemaining = group.studentIds.length;
+    const GROUP = pq.dequeue();
+    let amountStudentsRemaining = GROUP.studentIds.length;
     paths.forEach((path) => {
-      if (path.groupId === group.id && amountStudentsRemaining > 0) {
-        const min = Math.min(
+      if (path.groupId === GROUP.id && amountStudentsRemaining > 0) {
+        const MIN = Math.min(
           path.maxSize - path.valueForDistributingOfStudents,
           amountStudentsRemaining
         );
-        amountStudentsRemaining -= min;
+        amountStudentsRemaining -= MIN;
         path.valueForDistributingOfStudents
-          ? (path.valueForDistributingOfStudents = min)
-          : (path.valueForDistributingOfStudents += min);
+          ? (path.valueForDistributingOfStudents = MIN)
+          : (path.valueForDistributingOfStudents += MIN);
       }
     });
   }
@@ -141,32 +143,32 @@ function redistribute(
   record: Record<string, number>
 ) {
   paths.forEach((path) => {
-    const alternativePaths: Path[] = paths.filter(
+    const ALTERNATIVE_PATHS: Path[] = paths.filter(
       (pathItem) =>
         pathItem.groupId === path.groupId && !pathItem.path.includes(failedId)
     );
 
-    const failedGroupPaths: Path[] = paths.filter(
+    const FAILED_GROUP_PATHS: Path[] = paths.filter(
       (pathItem) =>
         pathItem.groupId === path.groupId && pathItem.path.includes(failedId)
     );
 
-    if (failedGroupPaths.length !== 0) {
-      failedGroupPaths.sort(
+    if (FAILED_GROUP_PATHS.length !== 0) {
+      FAILED_GROUP_PATHS.sort(
         (a, b) =>
           b.valueForDistributingOfStudents - a.valueForDistributingOfStudents
       );
 
-      failedGroupPaths.forEach((failedPath) => {
-        const removeCount =
+      FAILED_GROUP_PATHS.forEach((failedPath) => {
+        const REMOVE_COUNT =
           failedPath.valueForDistributingOfStudents - excessStudents;
 
-        failedPath.valueForDistributingOfStudents = removeCount;
+        failedPath.valueForDistributingOfStudents = REMOVE_COUNT;
 
         // Accumulate excess students without modifying it directly
         let remainingExcessStudentsCount = excessStudents;
 
-        alternativePaths.forEach((alternativePath) => {
+        ALTERNATIVE_PATHS.forEach((alternativePath) => {
           alternativePath.valueForDistributingOfStudents +=
             remainingExcessStudentsCount;
           remainingExcessStudentsCount = 0; // Ensure it doesn't go below 0
@@ -188,21 +190,21 @@ function allocateItemsToStudents(
 ): void {
   paths.forEach((path) => {
     if (path.valueForDistributingOfStudents !== 0) {
-      const groupId = path.groupId;
-      const studentsCount = path.valueForDistributingOfStudents;
+      const GROUP_ID = path.groupId;
+      const STUDENTS_COUNT = path.valueForDistributingOfStudents;
 
-      const group = groups.find((group) => groupId === group.id);
+      const GROUP = groups.find((group) => GROUP_ID === group.id);
 
-      if (group) {
-        const ids = Array.from({ length: studentsCount }, () =>
-          group.studentIds.shift()
+      if (GROUP) {
+        const IDS = Array.from({ length: STUDENTS_COUNT }, () =>
+          GROUP.studentIds.shift()
         );
 
         path.path.forEach((eventId) => {
           if (items.some((item) => item._id === eventId)) {
-            const item = items.find((item) => item._id === eventId);
-            if (item) {
-              item.studentIds.push(...ids);
+            const ITEM = items.find((item) => item._id === eventId);
+            if (ITEM) {
+              ITEM.studentIds.push(...IDS);
             }
           }
         });
@@ -211,39 +213,39 @@ function allocateItemsToStudents(
   });
 }
 function createRecord(paths: Path[]): Record<string, number> {
-  const record: Record<string, number> = {};
+  const RECORD: Record<string, number> = {};
   paths.forEach((path) => {
     path.path.forEach((pathItem) => {
-      record[pathItem] =
-        (record[pathItem] || 0) + path.valueForDistributingOfStudents;
+      RECORD[pathItem] =
+        (RECORD[pathItem] || 0) + path.valueForDistributingOfStudents;
     });
   });
-  return record;
+  return RECORD;
 }
 
 function checkForDuplicates(paths: Path[], items: Item[]) {
-  const record: Record<string, number> = createRecord(paths);
+  const RECORD: Record<string, number> = createRecord(paths);
   items.forEach((item) => {
-    if (record[item._id] > item.groupSize) {
-      redistribute(item._id, record[item._id] - item.groupSize, record);
+    if (RECORD[item._id] > item.groupSize) {
+      redistribute(item._id, RECORD[item._id] - item.groupSize, RECORD);
     }
   });
 }
 
 function countPathsByGroupId(paths: Path[]): Record<number, number> {
-  const countByGroupId: Record<number, number> = {};
+  const COUNT_BY_GROUP_ID: Record<number, number> = {};
 
   paths.forEach((path) => {
-    const groupId = path.groupId;
+    const GROUP_ID = path.groupId;
 
-    if (countByGroupId[groupId]) {
-      countByGroupId[groupId]++;
+    if (COUNT_BY_GROUP_ID[GROUP_ID]) {
+      COUNT_BY_GROUP_ID[GROUP_ID]++;
     } else {
-      countByGroupId[groupId] = 1;
+      COUNT_BY_GROUP_ID[GROUP_ID] = 1;
     }
   });
 
-  return countByGroupId;
+  return COUNT_BY_GROUP_ID;
 }
 
 function findItemsByStudentId(studentId: string, items: Item[]): Item[] {
@@ -251,11 +253,11 @@ function findItemsByStudentId(studentId: string, items: Item[]): Item[] {
 }
 
 function createPQ(groups: Group[]): PriorityQueue<Group> {
-  const pq = new PriorityQueue<Group>();
+  const PQ = new PriorityQueue<Group>();
   groups.forEach((group) => {
-    pq.enqueue(group, group.path.length);
+    PQ.enqueue(group, group.path.length);
   });
-  return pq;
+  return PQ;
 }
 // O(N^2 * M) estimated
 function main(
@@ -269,12 +271,12 @@ function main(
   project = project1;
   polls = polls1;
   paths = [];
-  const groups = buildGroupsWithSamePaths();
+  const GROUPS = buildGroupsWithSamePaths();
   g = createGraph(items);
-  findAllPathsForEachGroup(groups);
-  const pq = createPQ(groups);
-  distributeStudentsToPaths(pq);
-  allocateItemsToStudents(paths, items, groups);
+  findAllPathsForEachGroup(GROUPS);
+  const PQ = createPQ(GROUPS);
+  distributeStudentsToPaths(PQ);
+  allocateItemsToStudents(paths, items, GROUPS);
   return items1;
 }
 
