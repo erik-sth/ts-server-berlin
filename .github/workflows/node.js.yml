@@ -7,8 +7,8 @@ on:
     branches: ["main"]
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
+  test:
+    runs-on: self-hosted
 
     strategy:
       matrix:
