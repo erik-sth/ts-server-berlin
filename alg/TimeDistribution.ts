@@ -16,7 +16,7 @@ let polls: PollQuestion[] = [];
 let project: Project = {} as Project;
 let g: DirectedGraph<Item>;
 let paths: Path[] = [];
-
+let counter = 0;
 // O(1)
 function getDefaultIds(): string[] {
   return project.requiredForAll;
@@ -134,7 +134,7 @@ function distributeGroupsToPaths(
 
   checkForToBigGroupSizes(paths, items);
 }
-let counter = 0;
+
 function redistribute(failedId: string, excessStudents: number, items: Item[]) {
   paths.forEach((path) => {
     const ALTERNATIVE_PATHS: Path[] = paths.filter(
@@ -147,7 +147,7 @@ function redistribute(failedId: string, excessStudents: number, items: Item[]) {
         pathItem.groupId === path.groupId && pathItem.path.includes(failedId)
     );
 
-    if (FAILED_GROUP_PATHS.length !== 0) {
+    if (FAILED_GROUP_PATHS.length !== 0 && excessStudents !== 0) {
       FAILED_GROUP_PATHS.sort(
         (a, b) =>
           b.valueForDistributingOfStudents - a.valueForDistributingOfStudents
@@ -156,9 +156,7 @@ function redistribute(failedId: string, excessStudents: number, items: Item[]) {
       FAILED_GROUP_PATHS.forEach((failedPath) => {
         const REMOVE_COUNT =
           failedPath.valueForDistributingOfStudents - excessStudents;
-
         failedPath.valueForDistributingOfStudents = REMOVE_COUNT;
-
         // Accumulate excess students without modifying it directly
         let remainingExcessStudentsCount = excessStudents;
 
@@ -210,7 +208,7 @@ function allocateGroupsToItems(
     }
   });
 }
-function createRecord(paths: Path[]): Record<string, number> {
+function createRecordOfGroupSizes(paths: Path[]): Record<string, number> {
   const RECORD: Record<string, number> = {};
   paths.forEach((path) => {
     path.path.forEach((pathItem) => {
@@ -222,7 +220,7 @@ function createRecord(paths: Path[]): Record<string, number> {
 }
 
 function checkForToBigGroupSizes(paths: Path[], items: Item[]) {
-  const RECORD: Record<string, number> = createRecord(paths);
+  const RECORD: Record<string, number> = createRecordOfGroupSizes(paths);
   items.forEach((item) => {
     if (RECORD[item._id] > item.groupSize) {
       redistribute(item._id, RECORD[item._id] - item.groupSize, items);
