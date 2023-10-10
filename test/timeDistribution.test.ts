@@ -1,7 +1,7 @@
 import {
   findItemsByStudentId,
-  getExtraIds,
-  getRequiredIdsForEveryone,
+  getDefaultIds,
+  getVotingIds,
   main,
 } from "../alg/TimeDistribution";
 import { items, polls, students, project } from "./data";
@@ -10,13 +10,13 @@ describe("Time Distribution Algorithm", () => {
   const allocationResult = main(items, students, project, polls);
 
   it("should allocate the correct number of items to each student", () => {
-    const requiredIdsLength = getRequiredIdsForEveryone().length;
+    const requiredIdsLength = getDefaultIds().length;
 
     students.forEach((student) => {
       const studentId = student._id;
       const itemsForStudent = findItemsByStudentId(studentId, allocationResult);
       const expectedItemCount =
-        requiredIdsLength + getExtraIds(studentId).length;
+        requiredIdsLength + getVotingIds(studentId).length;
 
       expect(itemsForStudent.length).toBe(expectedItemCount);
     });
@@ -26,10 +26,7 @@ describe("Time Distribution Algorithm", () => {
     students.forEach((student) => {
       const studentId = student._id;
       const itemsForStudent = findItemsByStudentId(studentId, allocationResult);
-      const expectedItemIds = [
-        ...getRequiredIdsForEveryone(),
-        ...getExtraIds(studentId),
-      ];
+      const expectedItemIds = [...getDefaultIds(), ...getVotingIds(studentId)];
 
       expect(itemsForStudent.map((item) => item.eventId)).toEqual(
         expect.arrayContaining(expectedItemIds)
