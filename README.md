@@ -8,19 +8,19 @@ This project facilitates efficient item allocation to students based on specifie
 
 1. [Introduction](#introduction)
 2. [Components](#components)
-    - [Classes](#classes)
-    - [Data Structures](#data-structures)
-    - [Functions](#functions)
+   - [Classes](#classes)
+   - [Data Structures](#data-structures)
+   - [Functions](#functions)
 3. [Usage](#usage)
 4. [Commands](#commands)
-    - [Installation](#installation)
-    - [Testing](#testing)
-    - [Build](#build)
-    - [Start](#start)
+   - [Installation](#installation)
+   - [Testing](#testing)
+   - [Build](#build)
+   - [Start](#start)
 5. [Notes](#notes)
 6. [Getting Started](#getting-started)
-    - [Prerequisites](#prerequisites)
-    - [Installation](#installation-1)
+   - [Prerequisites](#prerequisites)
+   - [Installation](#installation-1)
 7. [Contributing](#contributing)
 8. [License](#license)
 9. [Acknowledgments](#acknowledgments)
@@ -44,13 +44,16 @@ Provide a brief introduction to the project, its goals, and the problems it solv
 3. **Project**: Represents the overall project, including items required for all students.
 4. **Student**: Represents a student, including information about the student and items they are already allocated.
 5. **Groups**: Represent every individual id groups with all available paths with their students.
+
 ### Functions
 
 1. **createGraph()**: Builds a directed graph based on provided items, creating edges between items with suitable time gaps.
-2. **getNextAvailableEventIds(currentItemEndTime, items)**: Returns a list of items that can be scheduled after the given item's end time.
-3. **allocateItemsToStudents()**: Allocates items to students using a depth-first search approach, considering required and extra items.
-4. **getRequiredIdsForEveryone()**: Returns a list of item IDs required for all students.
-5. **getExtraIds(studentId)**: Retrieves a list of extra item IDs based on a student's preferences, caching the result for efficiency.
+2. **buildGroupsWithSamePaths()**:Finds every Poll Combination and returns groups
+3. **findPathsForEachGroup()**: Finds every possible Path for each group
+4. **allocateGroupsToItems()**: Allocates the groups to the items.
+5. **distributeGroupsToPaths()**: Distributes every group to the individual paths and then checks every id
+6. **getDefaultIds()**: Returns a list of item IDs required for all students.
+7. **getVotingIds(studentId)**: Retrieves a list of extra item IDs based on a student's polls, caching the result for efficiency.
 
 ## Usage
 
@@ -89,8 +92,6 @@ To start the project, use:
 ```bash
 npm start
 ```
-
-
 
 ## Notes
 

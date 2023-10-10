@@ -17,3 +17,8 @@ Find all reuqiredId Combinations
 Find all possible paths for each combination
 
 try different approaches of group distribution and find the balanced way 
+
+
+
+
+use the distribution process maybe as graph or loop throug with backtreackin
