@@ -1,6 +1,7 @@
 import PollQuestion from "../types/Polls";
 import Student from "../types/Student";
 import Item from "../types/Item";
+import Project from "./../types/Project";
 
 const items: Item[] = [
   {
@@ -193,13 +194,9 @@ const polls: PollQuestion[] = [
 ];
 
 export { polls };
-interface Project {
-  name: string;
-  requiredForAll: string[];
-  relatedPolls: string[];
-}
 
 const project: Project = {
+  _id: "ProjectId",
   name: "Berlin 2024",
   requiredForAll: [
     "group1",

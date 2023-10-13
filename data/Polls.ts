@@ -75,5 +75,7 @@ const polls: PollQuestion[] = [
     ],
   },
 ];
-
-export { polls };
+function getPolls(projectId: string): PollQuestion[] {
+  return polls;
+}
+export { getPolls };

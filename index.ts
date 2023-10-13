@@ -1,11 +1,12 @@
 import { findItemsByStudentId, main } from "./alg/TimeDistribution";
-import { items } from "./data/Items";
-import { students } from "./data/Students";
-import { polls } from "./data/Polls";
-import { berlin } from "./data/Projects";
-
+import { getItems } from "./data/Items";
+import { getStudents } from "./data/Students";
+import { getPolls } from "./data/Polls";
+import { getProject } from "./data/Projects";
+const project = getProject();
+const projectId = project._id;
 console.time();
-main(items, students, berlin, polls);
+main(getItems(projectId), getStudents(projectId), project, getPolls(projectId));
 console.timeEnd();
 
 //O(n)
