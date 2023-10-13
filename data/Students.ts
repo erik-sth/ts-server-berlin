@@ -102,5 +102,7 @@ const students: Student[] = [
   { _id: "person99" },
   { _id: "person100" },
 ];
-
-export { students };
+function getStudents(projectId: string): Student[] {
+  return students;
+}
+export { getStudents };

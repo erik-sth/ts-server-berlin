@@ -1,6 +1,7 @@
 import { Project } from "../test/data";
 
 const berlin: Project = {
+  _id: "projectId1",
   name: "Berlin 2024",
   requiredForAll: [
     "group1",
@@ -13,5 +14,7 @@ const berlin: Project = {
   ],
   relatedPolls: ["id0", "id1"],
 };
-
-export { berlin };
+function getProject(): Project {
+  return berlin;
+}
+export { getProject };

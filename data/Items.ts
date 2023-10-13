@@ -112,4 +112,8 @@ const items: Item[] = [
   },
 ];
 
-export { items };
+function getItems(projectId: string): Item[] {
+  return items;
+}
+
+export { getItems };
