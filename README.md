@@ -31,6 +31,8 @@ Provide a brief introduction to the project, its goals, and the problems it solv
 
 ## Components
 
+1. **TimeDistributionAlg**: Distributes every student to a path
+
 ### Classes
 
 1. **PriorityQueue**: Implementation of a priority queue to prioritize students based on extra items they can accommodate.
@@ -114,7 +116,7 @@ Outline guidelines for contributing to the project. Include information on how t
 
 ## License
 
-Specify the license under which the project is distributed.
+Only personal use.
 
 ## Acknowledgments
 
