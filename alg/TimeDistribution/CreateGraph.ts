@@ -1,5 +1,5 @@
-import { DirectedGraph, GraphNode } from "../Class/Graph";
-import Item from "../types/Item";
+import { DirectedGraph, GraphNode } from "../../Class/Graph";
+import Item from "../../types/Item";
 
 // O(n^2)
 function createGraph(items: Item[]): DirectedGraph<Item> {
