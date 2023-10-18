@@ -7,6 +7,7 @@ function allocateGroupsToItems(
   items: Item[],
   groups: Group[]
 ): void {
+  items.forEach((item) => (item.studentIds = []));
   paths.forEach((path) => {
     if (path.valueForDistributingOfStudents !== 0) {
       const groupId = path.groupId;
