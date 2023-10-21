@@ -35,7 +35,7 @@ class DirectedGraph<T> {
   includes(item: T): boolean {
     return this.nodes.some((node) => node.value === item);
   }
-  getNode(value: T): GraphNode<T> | undefined {
+  getNode(value: T): GraphNode<T> {
     return this.nodes.find((node) => node.value === value);
   }
   removeEdge(from: GraphNode<T>, to: GraphNode<T>): void {

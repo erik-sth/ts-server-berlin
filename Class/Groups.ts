@@ -31,7 +31,7 @@ class Groups {
     return this.groups;
   }
 
-  get(path: string[]): Group | undefined {
+  get(path: string[]): Group {
     return this.groups.find((group) => arraysHaveSameValues(group.path, path));
   }
 }
