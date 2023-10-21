@@ -9,9 +9,9 @@ class PriorityQueue<T> {
     this.heapifyUp();
   }
 
-  dequeue(): T | undefined {
+  dequeue(): T {
     if (this.isEmpty()) {
-      return undefined;
+      throw new Error("PriorityQueue is Empty. Can't dequeue.");
     }
 
     const ROOT = this.items[0];
@@ -26,22 +26,14 @@ class PriorityQueue<T> {
     return ROOT.element;
   }
 
-  peek(): T | undefined {
+  front(): T | undefined {
     return this.isEmpty() ? undefined : this.items[0].element;
   }
 
-  peekLast(): T | undefined {
+  rear(): T | undefined {
     return this.isEmpty()
       ? undefined
       : this.items[this.items.length - 1].element;
-  }
-
-  front(): T | undefined {
-    return this.peek();
-  }
-
-  rear(): T | undefined {
-    return this.peekLast();
   }
 
   isEmpty(): boolean {
