@@ -17,7 +17,7 @@ class Groups {
       this.groups.push({
         path,
         studentIds: [studentId],
-        id: this.groups.length + 1,
+        _id: this.groups.length + 1,
       });
     }
   }

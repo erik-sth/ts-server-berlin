@@ -3,7 +3,7 @@ import { Project } from "../../test/data";
 const berlin: Project = {
   _id: "projectId1",
   name: "Berlin 2024",
-  requiredForAll: [
+  idsThatAreRequiredForEveryone: [
     "group1",
     "group2",
     "group3",

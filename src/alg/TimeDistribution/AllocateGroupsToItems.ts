@@ -9,11 +9,11 @@ function allocateGroupsToItems(
 ): void {
   items.forEach((item) => (item.studentIds = []));
   paths.forEach((path) => {
-    if (path.valueForDistributingOfStudents !== 0) {
+    if (path.valueForTestingStudentDistribution !== 0) {
       const groupId = path.groupId;
-      const studentsCount = path.valueForDistributingOfStudents;
+      const studentsCount = path.valueForTestingStudentDistribution;
 
-      const group = groups.find((group) => groupId === group.id);
+      const group = groups.find((group) => groupId === group._id);
 
       if (group) {
         const ids = Array.from({ length: studentsCount }, () =>
