@@ -1,17 +1,15 @@
-import { DirectedGraph, GraphNode } from "../Class/Graph";
-import Project from "../types/Project";
-import Student from "../types/Student";
-import Item from "../types/Item";
-import PollQuestion from "../types/Polls";
-
-import createGraph from "./TimeDistribution/CreateGraph";
 import { Group, Groups } from "../Class/Groups";
 import { PriorityQueue } from "../Class/PriorityQueue";
-import { Path } from "../types/Path";
-import { findPathsForEachGroup } from "./TimeDistribution/FindPaths";
+import PollQuestion from "../types/Polls";
+import Student from "../types/Student";
+import createGraph from "./TimeDistribution/CreateGraph";
 import { distributeGroupsToPaths } from "./TimeDistribution/DistributeGroups";
-import { allocateGroupsToItems } from "./TimeDistribution/AllocateGroupsToItems";
+import { findPathsForEachGroup } from "./TimeDistribution/FindPaths";
 import { getVotingIds } from "./TimeDistribution/Utils";
+import { allocateGroupsToItems } from "./TimeDistribution/AllocateGroupsToItems";
+import Item from "../types/Item";
+import Project from "../types/Project";
+import { Path } from "../types/Path";
 
 function buildGroupsWithSamePaths(
   polls: PollQuestion[],

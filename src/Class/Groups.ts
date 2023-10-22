@@ -1,10 +1,5 @@
+import { Group } from "../types/Group";
 import { arraysHaveSameValues } from "../utils/array";
-
-interface Group {
-  id: number;
-  path: string[];
-  studentIds: string[];
-}
 
 class Groups {
   private groups: Group[] = [];
