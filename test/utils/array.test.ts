@@ -1,4 +1,4 @@
-import { arraysHaveSameValues } from "../../utils/array";
+import { arraysHaveSameValues } from "../../src/utils/array";
 
 describe("arraysHaveSameValues", () => {
   it("should return true for arrays with the same values", () => {
