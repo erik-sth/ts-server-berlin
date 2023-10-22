@@ -7,7 +7,7 @@
     "build": "tsc --build",
     "clean": "tsc --build --clean",
     "test": "jest",
-    "start": "ts-node index.ts"
+    "start": "ts-node src/index.ts"
   },
   "devDependencies": {
     "@types/jest": "^29.5.5",
