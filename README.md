@@ -21,9 +21,7 @@ This project facilitates efficient item allocation to students based on specifie
 6. [Getting Started](#getting-started)
    - [Prerequisites](#prerequisites)
    - [Installation](#installation-1)
-7. [Contributing](#contributing)
-8. [License](#license)
-9. [Acknowledgments](#acknowledgments)
+
 
 ## Introduction
 
@@ -49,7 +47,7 @@ Provide a brief introduction to the project, its goals, and the problems it solv
 
 ### Functions
 
-1. **createGraph()**: Builds a directed graph based on provided items, creating edges between items with suitable time gaps.
+1. ** ()**: Builds a directed graph based on provided items, creating edges between items with suitable time gaps.
 2. **buildGroupsWithSamePaths()**:Finds every Poll Combination and returns groups
 3. **findPathsForEachGroup()**: Finds every possible Path for each group
 4. **allocateGroupsToItems()**: Allocates the groups to the items.
@@ -95,13 +93,6 @@ To start the project, use:
 npm start
 ```
 
-## Notes
-
-- Mention any assumptions, key strategies, and efficiency considerations.
-- Highlight any customization options or parameters that users might want to adjust.
-
-## Getting Started
-
 ### Prerequisites
 
 List any prerequisites or dependencies that users need to have installed.
@@ -110,14 +101,4 @@ List any prerequisites or dependencies that users need to have installed.
 
 Provide step-by-step instructions on how to install and set up the project.
 
-## Contributing
 
-Outline guidelines for contributing to the project. Include information on how to submit issues, suggest improvements, and propose new features.
-
-## License
-
-Only personal use.
-
-## Acknowledgments
-
-Give credit to any third-party libraries, resources, or inspirations used in the project.
