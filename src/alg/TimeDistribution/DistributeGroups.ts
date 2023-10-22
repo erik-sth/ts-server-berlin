@@ -7,19 +7,21 @@ const MAX_ITERATIONS = 2000;
 let counter = 0;
 let failed = false;
 
-function createRecordOfGroupSizes(paths: Path[]): Record<string, number> {
+function createRecordOfCurrentUsedCapacity(
+  paths: Path[]
+): Record<string, number> {
   const record: Record<string, number> = {};
   paths.forEach((path) => {
     path.path.forEach((pathItem) => {
       record[pathItem] =
-        (record[pathItem] || 0) + path.valueForDistributingOfStudents;
+        (record[pathItem] || 0) + path.valueForTestingStudentDistribution;
     });
   });
   return record;
 }
 
-function checkForToBigGroupSizes(paths: Path[], items: Item[]): void {
-  const record = createRecordOfGroupSizes(paths);
+function checkForExceedingGroupCapacities(paths: Path[], items: Item[]): void {
+  const record = createRecordOfCurrentUsedCapacity(paths);
   items.forEach((item) => {
     if (record[item._id] > item.groupCapazity) {
       redistribute(
@@ -31,7 +33,7 @@ function checkForToBigGroupSizes(paths: Path[], items: Item[]): void {
     }
   });
 }
-function distributeGroupsToPaths(
+function distributeStudentsToPaths(
   pq: PriorityQueue<Group>,
   items: Item[],
   paths: Path[]
@@ -43,19 +45,19 @@ function distributeGroupsToPaths(
     paths.forEach((path) => {
       if (path.groupId === group._id && amountStudentsRemaining > 0) {
         const min = Math.min(
-          path.groupCapacity - path.valueForDistributingOfStudents,
+          path.groupCapacity - path.valueForTestingStudentDistribution,
           amountStudentsRemaining
         );
 
         amountStudentsRemaining -= min;
-        path.valueForDistributingOfStudents
-          ? (path.valueForDistributingOfStudents = min)
-          : (path.valueForDistributingOfStudents += min);
+        path.valueForTestingStudentDistribution
+          ? (path.valueForTestingStudentDistribution = min)
+          : (path.valueForTestingStudentDistribution += min);
       }
     });
   }
 
-  checkForToBigGroupSizes(paths, items);
+  checkForExceedingGroupCapacities(paths, items);
 }
 
 function redistribute(
@@ -78,18 +80,19 @@ function redistribute(
     if (failedGroupPaths.length !== 0 && excessStudents !== 0) {
       failedGroupPaths.sort(
         (a, b) =>
-          b.valueForDistributingOfStudents - a.valueForDistributingOfStudents
+          b.valueForTestingStudentDistribution -
+          a.valueForTestingStudentDistribution
       );
 
       failedGroupPaths.forEach((failedPath) => {
         const removeCount =
-          failedPath.valueForDistributingOfStudents - excessStudents;
-        failedPath.valueForDistributingOfStudents = removeCount;
+          failedPath.valueForTestingStudentDistribution - excessStudents;
+        failedPath.valueForTestingStudentDistribution = removeCount;
 
         let remainingExcessStudentsCount = excessStudents;
 
         alternativePaths.forEach((alternativePath) => {
-          alternativePath.valueForDistributingOfStudents +=
+          alternativePath.valueForTestingStudentDistribution +=
             remainingExcessStudentsCount;
           remainingExcessStudentsCount = 0;
         });
@@ -103,8 +106,8 @@ function redistribute(
   if (counter > MAX_ITERATIONS) {
     failed = true;
   } else {
-    checkForToBigGroupSizes(paths, items);
+    checkForExceedingGroupCapacities(paths, items);
   }
 }
 
-export { distributeGroupsToPaths };
+export { distributeStudentsToPaths };

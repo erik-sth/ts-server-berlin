@@ -3,8 +3,8 @@ import { PriorityQueue } from "../Class/PriorityQueue";
 import PollQuestion from "../types/Polls";
 import Student from "../types/Student";
 import createGraph from "./TimeDistribution/CreateGraph";
-import { distributeGroupsToPaths } from "./TimeDistribution/DistributeGroups";
-import { findPathsForEachGroup } from "./TimeDistribution/FindPaths";
+import { distributeStudentsToPaths } from "./TimeDistribution/DistributeGroups";
+import { findPathsForTheGroups } from "./TimeDistribution/FindPaths";
 import { getVotingIds } from "./TimeDistribution/Utils";
 import { allocateGroupsToItems } from "./TimeDistribution/AllocateGroupsToItems";
 import Item from "../types/Item";
@@ -38,9 +38,9 @@ function main(
 ): Item[] {
   const groups = buildGroupsByPaths(polls, students);
   const g = createGraph(items);
-  const paths: Path[] = findPathsForEachGroup(groups, items, g, project);
+  const paths: Path[] = findPathsForTheGroups(groups, items, g, project);
   const pq: PriorityQueue<Group> = createPQ(groups);
-  distributeGroupsToPaths(pq, items, paths);
+  distributeStudentsToPaths(pq, items, paths);
 
   allocateGroupsToItems(paths, items, groups);
 

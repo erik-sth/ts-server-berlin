@@ -5,7 +5,7 @@ import { Path } from "../../types/Path";
 import Project from "../../types/Project";
 import { getDefaultIds } from "./Utils";
 
-function findPathsForEachGroup(
+function findPathsForTheGroups(
   groups: Group[],
   items: Item[],
   g: DirectedGraph<Item>,
@@ -45,8 +45,8 @@ function dfs(
     paths.push({
       groupId,
       path: newPath,
-      groupCapacity: getSmallestAvailableSeats(newPath, items),
-      valueForDistributingOfStudents: 0,
+      groupCapacity: getMaxAvailableCapacity(newPath, items),
+      valueForTestingStudentDistribution: 0,
     });
   } else if (node.edges !== null) {
     node.edges.forEach((edge) =>
@@ -56,11 +56,11 @@ function dfs(
 
   remainingIds.add(node.value.eventId);
 }
-function getSmallestAvailableSeats(path: string[], items: Item[]): number {
+function getMaxAvailableCapacity(path: string[], items: Item[]): number {
   return Math.min(
     ...items
       .filter((item) => path.includes(item._id))
       .map((item) => item.groupCapazity)
   );
 }
-export { findPathsForEachGroup };
+export { findPathsForTheGroups };
