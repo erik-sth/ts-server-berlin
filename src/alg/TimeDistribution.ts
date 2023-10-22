@@ -1,50 +1,50 @@
-import { Group, Groups } from "../Class/Groups";
-import { PriorityQueue } from "../Class/PriorityQueue";
-import PollQuestion from "../types/Polls";
-import Student from "../types/Student";
-import createGraph from "./TimeDistribution/CreateGraph";
-import { distributeStudentsToPaths } from "./TimeDistribution/DistributeGroups";
-import { findPathsForTheGroups } from "./TimeDistribution/FindPaths";
-import { getVotingIds } from "./TimeDistribution/Utils";
-import { allocateGroupsToItems } from "./TimeDistribution/AllocateGroupsToItems";
-import Item from "../types/Item";
-import Project from "../types/Project";
-import { Path } from "../types/Path";
+import { Group, Groups } from '../Class/Groups';
+import { PriorityQueue } from '../Class/PriorityQueue';
+import PollQuestion from '../types/Polls';
+import Student from '../types/Student';
+import createGraph from './TimeDistribution/CreateGraph';
+import { distributeStudentsToPaths } from './TimeDistribution/DistributeGroups';
+import { findPathsForTheGroups } from './TimeDistribution/FindPaths';
+import { getVotingIds } from './TimeDistribution/Utils';
+import { allocateGroupsToItems } from './TimeDistribution/AllocateGroupsToItems';
+import Item from '../types/Item';
+import Project from '../types/Project';
+import { Path } from '../types/Path';
 
 function buildGroupsByPaths(
-  polls: PollQuestion[],
-  students: Student[]
+    polls: PollQuestion[],
+    students: Student[]
 ): Group[] {
-  const groups = new Groups();
-  students.forEach((student) => {
-    groups.add(getVotingIds(student._id, polls), student._id);
-  });
-  return groups.getAll();
+    const groups = new Groups();
+    students.forEach((student) => {
+        groups.add(getVotingIds(student._id, polls), student._id);
+    });
+    return groups.getAll();
 }
 
 function createPQ(groups: Group[]): PriorityQueue<Group> {
-  const pq = new PriorityQueue<Group>();
-  groups.forEach((group) => {
-    pq.enqueue(group, group.path.length);
-  });
-  return pq;
+    const pq = new PriorityQueue<Group>();
+    groups.forEach((group) => {
+        pq.enqueue(group, group.path.length);
+    });
+    return pq;
 }
 
 function main(
-  items: Item[],
-  students: Student[],
-  project: Project,
-  polls: PollQuestion[]
+    items: Item[],
+    students: Student[],
+    project: Project,
+    polls: PollQuestion[]
 ): Item[] {
-  const groups = buildGroupsByPaths(polls, students);
-  const g = createGraph(items);
-  const paths: Path[] = findPathsForTheGroups(groups, items, g, project);
-  const pq: PriorityQueue<Group> = createPQ(groups);
-  distributeStudentsToPaths(pq, items, paths);
+    const groups = buildGroupsByPaths(polls, students);
+    const g = createGraph(items);
+    const paths: Path[] = findPathsForTheGroups(groups, items, g, project);
+    const pq: PriorityQueue<Group> = createPQ(groups);
+    distributeStudentsToPaths(pq, items, paths);
 
-  allocateGroupsToItems(paths, items, groups);
+    allocateGroupsToItems(paths, items, groups);
 
-  return items;
+    return items;
 }
 
 export { main, getVotingIds };
