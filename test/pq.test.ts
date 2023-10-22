@@ -1,4 +1,4 @@
-import { PriorityQueue } from "../Class/PriorityQueue";
+import { PriorityQueue } from "../src/Class/PriorityQueue";
 
 describe("PriorityQueue", () => {
   it("should enqueue elements with proper priority and dequeue in correct order", () => {
@@ -13,12 +13,10 @@ describe("PriorityQueue", () => {
     expect(priorityQueue.dequeue()).toBe("Task 1");
   });
 
-  it("should return undefined when dequeuing from an empty queue", () => {
+  it("should return when dequeuing from an empty queue", () => {
     const priorityQueue = new PriorityQueue<number>();
 
-    const result = priorityQueue.dequeue();
-
-    expect(result).toBeUndefined();
+    expect(() => priorityQueue.dequeue()).toThrow();
   });
 
   it("should return the front element without dequeuing", () => {
@@ -51,8 +49,8 @@ describe("PriorityQueue", () => {
   it("should return undefined when peeking an empty queue", () => {
     const priorityQueue = new PriorityQueue<number>();
 
-    expect(priorityQueue.peek()).toBeUndefined();
-    expect(priorityQueue.peekLast()).toBeUndefined();
+    expect(priorityQueue.front()).toBeUndefined();
+    expect(priorityQueue.rear()).toBeUndefined();
   });
 
   it("should return the correct size of the queue", () => {

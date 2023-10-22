@@ -1,10 +1,5 @@
+import { Group } from "../types/Group";
 import { arraysHaveSameValues } from "../utils/array";
-
-interface Group {
-  id: number;
-  path: string[];
-  studentIds: string[];
-}
 
 class Groups {
   private groups: Group[] = [];
@@ -31,7 +26,7 @@ class Groups {
     return this.groups;
   }
 
-  get(path: string[]): Group | undefined {
+  get(path: string[]): Group {
     return this.groups.find((group) => arraysHaveSameValues(group.path, path));
   }
 }

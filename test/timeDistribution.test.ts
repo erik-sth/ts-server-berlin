@@ -1,8 +1,9 @@
-import { getVotingIds, main } from "../alg/TimeDistribution";
+import { main } from "../src/alg/TimeDistribution";
 import {
   findItemsByStudentId,
   getDefaultIds,
-} from "../alg/TimeDistribution/Utils";
+  getVotingIds,
+} from "../src/alg/TimeDistribution/Utils";
 import { items, polls, students, project } from "./data";
 
 describe("Time Distribution Algorithm", () => {

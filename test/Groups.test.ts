@@ -1,4 +1,4 @@
-import { Groups, Group } from "../Class/Groups";
+import { Groups, Group } from "../src/Class/Groups";
 
 describe("Groups class", () => {
   let groups: Groups;
@@ -7,7 +7,7 @@ describe("Groups class", () => {
     groups = new Groups();
   });
 
-  test("should add a student to an existing group", () => {
+  it("should add a student to an existing group", () => {
     const path = ["A", "B", "C"];
     const studentId = "123";
 
@@ -17,7 +17,7 @@ describe("Groups class", () => {
     expect(groups.getAll()).toEqual([expectedGroup]);
   });
 
-  test("should create a new group if path doesn't exist", () => {
+  it("should create a new group if path doesn't exist", () => {
     const path1 = ["A", "B", "C"];
     const path2 = ["X", "Y", "Z"];
     const studentId1 = "123";
@@ -33,7 +33,7 @@ describe("Groups class", () => {
     expect(groups.getAll()).toEqual(expectedGroups);
   });
 
-  test("should get a group by path", () => {
+  it("should get a group by path", () => {
     const path = ["A", "B", "C"];
     const studentId = "123";
 
@@ -45,7 +45,7 @@ describe("Groups class", () => {
     expect(retrievedGroup).toEqual(expectedGroup);
   });
 
-  test("should return undefined when getting a non-existing group", () => {
+  it("should return undefined when getting a non-existing group", () => {
     const path = ["X", "Y", "Z"];
 
     const retrievedGroup = groups.get(path);
