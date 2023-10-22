@@ -4,7 +4,7 @@ import Project from "../../types/Project";
 
 const EXTRA_IDS_CACHE = new Map<string, string[]>();
 function getDefaultIds(project: Project): string[] {
-  return project.requiredForAll;
+  return project.idsThatAreRequiredForEveryone;
 }
 
 function getVotingIds(studentId: string, polls: PollQuestion[]): string[] {

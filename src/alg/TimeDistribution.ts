@@ -11,7 +11,7 @@ import Item from "../types/Item";
 import Project from "../types/Project";
 import { Path } from "../types/Path";
 
-function buildGroupsWithSamePaths(
+function buildGroupsByPaths(
   polls: PollQuestion[],
   students: Student[]
 ): Group[] {
@@ -36,7 +36,7 @@ function main(
   project: Project,
   polls: PollQuestion[]
 ): Item[] {
-  const groups = buildGroupsWithSamePaths(polls, students);
+  const groups = buildGroupsByPaths(polls, students);
   const g = createGraph(items);
   const paths: Path[] = findPathsForEachGroup(groups, items, g, project);
   const pq: PriorityQueue<Group> = createPQ(groups);

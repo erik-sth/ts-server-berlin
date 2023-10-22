@@ -21,8 +21,13 @@ function createRecordOfGroupSizes(paths: Path[]): Record<string, number> {
 function checkForToBigGroupSizes(paths: Path[], items: Item[]): void {
   const record = createRecordOfGroupSizes(paths);
   items.forEach((item) => {
-    if (record[item._id] > item.groupSize) {
-      redistribute(item._id, record[item._id] - item.groupSize, items, paths);
+    if (record[item._id] > item.groupCapazity) {
+      redistribute(
+        item._id,
+        record[item._id] - item.groupCapazity,
+        items,
+        paths
+      );
     }
   });
 }
@@ -36,9 +41,9 @@ function distributeGroupsToPaths(
     let amountStudentsRemaining = group.studentIds.length;
 
     paths.forEach((path) => {
-      if (path.groupId === group.id && amountStudentsRemaining > 0) {
+      if (path.groupId === group._id && amountStudentsRemaining > 0) {
         const min = Math.min(
-          path.maxSize - path.valueForDistributingOfStudents,
+          path.groupCapacity - path.valueForDistributingOfStudents,
           amountStudentsRemaining
         );
 

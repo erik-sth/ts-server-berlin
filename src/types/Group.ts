@@ -1,5 +1,5 @@
 export interface Group {
-  id: number;
+  _id: number;
   path: string[];
   studentIds: string[];
 }

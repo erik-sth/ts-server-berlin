@@ -13,7 +13,7 @@ function allocateGroupsToItems(
       const groupId = path.groupId;
       const studentsCount = path.valueForDistributingOfStudents;
 
-      const group = groups.find((group) => groupId === group.id);
+      const group = groups.find((group) => groupId === group._id);
 
       if (group) {
         const ids = Array.from({ length: studentsCount }, () =>

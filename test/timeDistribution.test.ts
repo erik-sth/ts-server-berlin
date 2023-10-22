@@ -38,7 +38,7 @@ describe("Time Distribution Algorithm", () => {
   });
   it("should have only the allowed group size of students", () => {
     items.forEach((item) => {
-      expect(item.studentIds.length).toBeLessThanOrEqual(item.groupSize);
+      expect(item.studentIds.length).toBeLessThanOrEqual(item.groupCapazity);
     });
   });
 
@@ -64,7 +64,7 @@ describe("Time Distribution Algorithm", () => {
             otherItem.eventId === itemsForStudent[i].eventId &&
             otherItem !== itemsForStudent[i]
         );
-        const groupSize = itemsForStudent[i].groupSize;
+        const groupSize = itemsForStudent[i].groupCapazity;
         const studentsInGroup = groupEvents.reduce(
           (total, groupEvent) => total + groupEvent.studentIds.length,
           0

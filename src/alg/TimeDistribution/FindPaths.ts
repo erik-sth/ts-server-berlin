@@ -17,7 +17,7 @@ function findPathsForEachGroup(
   groups.forEach((group) => {
     const ids = new Set([...requiredIds, ...group.path]);
     entries.forEach((entry: GraphNode<Item>) => {
-      dfs(entry, ids, [], group.path, group.id, items, paths);
+      dfs(entry, ids, [], group.path, group._id, items, paths);
     });
   });
 
@@ -45,7 +45,7 @@ function dfs(
     paths.push({
       groupId,
       path: newPath,
-      maxSize: getSmallestAvailableSeats(newPath, items),
+      groupCapacity: getSmallestAvailableSeats(newPath, items),
       valueForDistributingOfStudents: 0,
     });
   } else if (node.edges !== null) {
@@ -60,7 +60,7 @@ function getSmallestAvailableSeats(path: string[], items: Item[]): number {
   return Math.min(
     ...items
       .filter((item) => path.includes(item._id))
-      .map((item) => item.groupSize)
+      .map((item) => item.groupCapazity)
   );
 }
 export { findPathsForEachGroup };
