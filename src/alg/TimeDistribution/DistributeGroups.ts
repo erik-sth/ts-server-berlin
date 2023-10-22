@@ -2,9 +2,10 @@ import { Group } from "../../Class/Groups";
 import { PriorityQueue } from "../../Class/PriorityQueue";
 import Item from "../../types/Item";
 import { Path } from "../../types/Path";
+import { getMaxAvailableCapacity } from "./FindPaths";
 
 const MAX_ITERATIONS = 2000;
-let counter = 0;
+let currentIterationCount = 0;
 let failed = false;
 
 function createRecordOfCurrentUsedCapacity(
@@ -20,19 +21,6 @@ function createRecordOfCurrentUsedCapacity(
   return record;
 }
 
-function checkForExceedingGroupCapacities(paths: Path[], items: Item[]): void {
-  const record = createRecordOfCurrentUsedCapacity(paths);
-  items.forEach((item) => {
-    if (record[item._id] > item.groupCapazity) {
-      redistribute(
-        item._id,
-        record[item._id] - item.groupCapazity,
-        items,
-        paths
-      );
-    }
-  });
-}
 function distributeStudentsToPaths(
   pq: PriorityQueue<Group>,
   items: Item[],
@@ -45,10 +33,10 @@ function distributeStudentsToPaths(
     paths.forEach((path) => {
       if (path.groupId === group._id && amountStudentsRemaining > 0) {
         const min = Math.min(
-          path.groupCapacity - path.valueForTestingStudentDistribution,
+          getMaxAvailableCapacity(path.path, items) -
+            path.valueForTestingStudentDistribution,
           amountStudentsRemaining
         );
-
         amountStudentsRemaining -= min;
         path.valueForTestingStudentDistribution
           ? (path.valueForTestingStudentDistribution = min)
@@ -60,6 +48,31 @@ function distributeStudentsToPaths(
   checkForExceedingGroupCapacities(paths, items);
 }
 
+function getCurrentMaxAvailableCapacity(
+  path: string[],
+  items: Item[],
+  record: Record<string, number>
+): number {
+  return Math.min(
+    ...items
+      .filter((item) => path.includes(item._id))
+      .map((item) => item.groupCapazity - record[item._id])
+  );
+}
+function checkForExceedingGroupCapacities(paths: Path[], items: Item[]): void {
+  const record = createRecordOfCurrentUsedCapacity(paths);
+  items.forEach((item) => {
+    if (record[item._id] > item.groupCapazity) {
+      console.log(item._id);
+      redistribute(
+        item._id,
+        record[item._id] - item.groupCapazity,
+        items,
+        paths
+      );
+    }
+  });
+}
 function redistribute(
   failedId: string,
   excessStudents: number,
@@ -102,8 +115,8 @@ function redistribute(
     }
   });
 
-  counter++;
-  if (counter > MAX_ITERATIONS) {
+  currentIterationCount++;
+  if (currentIterationCount > MAX_ITERATIONS) {
     failed = true;
   } else {
     checkForExceedingGroupCapacities(paths, items);

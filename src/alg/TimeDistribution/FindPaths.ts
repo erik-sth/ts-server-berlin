@@ -45,7 +45,6 @@ function dfs(
     paths.push({
       groupId,
       path: newPath,
-      groupCapacity: getMaxAvailableCapacity(newPath, items),
       valueForTestingStudentDistribution: 0,
     });
   } else if (node.edges !== null) {
@@ -63,4 +62,4 @@ function getMaxAvailableCapacity(path: string[], items: Item[]): number {
       .map((item) => item.groupCapazity)
   );
 }
-export { findPathsForTheGroups };
+export { findPathsForTheGroups, getMaxAvailableCapacity };
