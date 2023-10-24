@@ -1,7 +1,7 @@
 import { DirectedGraph, GraphNode } from '../../Class/Graph';
 import { Group } from '../../Class/Groups';
 import Item from '../../types/Item';
-import { Path } from '../../types/Path';
+import { Path_config } from '../../types/Path_config';
 import Project from '../../types/Project';
 import { getDefaultIds } from './Utils';
 
@@ -10,18 +10,18 @@ function findPathsForTheGroups(
     items: Item[],
     g: DirectedGraph<Item>,
     project: Project
-): Path[] {
-    const paths: Path[] = [];
+): Path_config[] {
+    const path_configs: Path_config[] = [];
     const requiredIds = new Set<string>(getDefaultIds(project));
     const entries = g.getNodesWithoutIngoingEdges();
     groups.forEach((group) => {
         const ids = new Set([...requiredIds, ...group.path]);
         entries.forEach((entry: GraphNode<Item>) => {
-            dfs(entry, ids, [], group.path, group._id, items, paths);
+            dfs(entry, ids, [], group.path, group._id, items, path_configs);
         });
     });
 
-    return paths;
+    return path_configs;
 }
 function dfs(
     node: GraphNode<Item>,
@@ -30,7 +30,7 @@ function dfs(
     extraIds: string[],
     groupId: number,
     items: Item[],
-    paths: Path[]
+    path_configs: Path_config[]
 ): void {
     const requiredIdsCopy = new Set(remainingIds);
 
@@ -42,14 +42,22 @@ function dfs(
     remainingIds.delete(node.value.eventId);
 
     if (remainingIds.size === 0) {
-        paths.push({
+        path_configs.push({
             groupId,
             path: newPath,
             valueForTestingStudentDistribution: 0,
         });
     } else if (node.edges !== null) {
         node.edges.forEach((edge) =>
-            dfs(edge, remainingIds, newPath, extraIds, groupId, items, paths)
+            dfs(
+                edge,
+                remainingIds,
+                newPath,
+                extraIds,
+                groupId,
+                items,
+                path_configs
+            )
         );
     }
 

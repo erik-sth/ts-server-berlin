@@ -1,17 +1,18 @@
 import type Item from '../../types/Item';
-import { type Path } from '../../types/Path';
+import { type Path_config } from '../../types/Path_config';
 import { Group } from '../../Class/Groups';
 
 function allocateGroupsToItems(
-    paths: Path[],
+    path_configs: Path_config[],
     items: Item[],
     groups: Group[]
 ): void {
     items.forEach((item) => (item.studentIds = []));
-    paths.forEach((path) => {
-        if (path.valueForTestingStudentDistribution !== 0) {
-            const groupId = path.groupId;
-            const studentsCount = path.valueForTestingStudentDistribution;
+    path_configs.forEach((path_config) => {
+        if (path_config.valueForTestingStudentDistribution !== 0) {
+            const groupId = path_config.groupId;
+            const studentsCount =
+                path_config.valueForTestingStudentDistribution;
 
             const group = groups.find((group) => groupId === group._id);
 
@@ -20,7 +21,7 @@ function allocateGroupsToItems(
                     group.studentIds.shift()
                 );
 
-                path.path.forEach((eventId) => {
+                path_config.path.forEach((eventId) => {
                     if (items.some((item) => item._id === eventId)) {
                         const item = items.find((item) => item._id === eventId);
                         if (item) {
