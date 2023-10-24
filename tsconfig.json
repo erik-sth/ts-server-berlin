@@ -6,7 +6,7 @@
         "target": "ES6",
         "sourceMap": true,
         "outDir": "dist",
-        "baseUrl": "*"
+        "baseUrl": "."
     },
     "include": ["**/**/*", "*", "jest.config.js"]
 }
