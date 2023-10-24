@@ -9,7 +9,7 @@ import { getVotingIds } from './TimeDistribution/Utils';
 import { allocateGroupsToItems } from './TimeDistribution/AllocateGroupsToItems';
 import Item from '../types/Item';
 import Project from '../types/Project';
-import { Path } from '../types/Path';
+import { Path_config } from '../types/Path_config';
 
 function buildGroupsByPaths(
     polls: PollQuestion[],
@@ -38,11 +38,16 @@ function main(
 ): Item[] {
     const groups = buildGroupsByPaths(polls, students);
     const g = createGraph(items);
-    const paths: Path[] = findPathsForTheGroups(groups, items, g, project);
+    const path_configs: Path_config[] = findPathsForTheGroups(
+        groups,
+        items,
+        g,
+        project
+    );
     const pq: PriorityQueue<Group> = createPQ(groups);
-    distributeStudentsToPaths(pq, items, paths);
+    distributeStudentsToPaths(pq, items, path_configs);
 
-    allocateGroupsToItems(paths, items, groups);
+    allocateGroupsToItems(path_configs, items, groups);
 
     return items;
 }
