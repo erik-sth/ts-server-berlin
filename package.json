@@ -7,7 +7,8 @@
     "build": "tsc --build",
     "clean": "tsc --build --clean",
     "test": "jest",
-    "start": "ts-node src/index.ts"
+    "start": "ts-node src/index.ts",
+    "benchmark": "ts-node benchmark/timeDistribution"
   },
   "devDependencies": {
     "@types/jest": "^29.5.5",
