@@ -1,5 +1,7 @@
+import Item from './Item';
+
 export interface Group {
     _id: number;
-    path: string[];
+    requiredEvents: string[];
     studentIds: string[];
 }

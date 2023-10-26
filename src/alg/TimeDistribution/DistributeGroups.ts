@@ -14,8 +14,8 @@ function createRecordOfCurrentUsedCapacity(
     const record: Record<string, number> = {};
     paths.forEach((path) => {
         path.path.forEach((pathItem) => {
-            record[pathItem] =
-                (record[pathItem] || 0) +
+            record[pathItem._id] =
+                (record[pathItem._id] || 0) +
                 path.valueForTestingStudentDistribution;
         });
     });
@@ -34,7 +34,7 @@ function distributeStudentsToPaths(
         paths.forEach((path) => {
             if (path.groupId === group._id && amountStudentsRemaining > 0) {
                 const min = Math.min(
-                    getMaxAvailableCapacity(path.path, items) -
+                    getMaxAvailableCapacity(path.path) -
                         path.valueForTestingStudentDistribution,
                     amountStudentsRemaining
                 );
@@ -68,7 +68,7 @@ function checkForExceedingGroupCapacities(
     items.forEach((item) => {
         if (record[item._id] > item.groupCapazity) {
             redistribute(
-                item._id,
+                item,
                 record[item._id] - item.groupCapazity,
                 items,
                 paths
@@ -77,7 +77,7 @@ function checkForExceedingGroupCapacities(
     });
 }
 function redistribute(
-    failedId: string,
+    failedId: Item,
     excessStudents: number,
     items: Item[],
     paths: Path_config[]

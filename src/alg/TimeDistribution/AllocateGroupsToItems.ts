@@ -22,8 +22,8 @@ function allocateGroupsToItems(
                 );
 
                 path_config.path.forEach((eventId) => {
-                    if (items.some((item) => item._id === eventId)) {
-                        const item = items.find((item) => item._id === eventId);
+                    if (items.some((item) => item === eventId)) {
+                        const item = items.find((item) => item === eventId);
                         if (item) {
                             item.studentIds.push(...ids);
                         }

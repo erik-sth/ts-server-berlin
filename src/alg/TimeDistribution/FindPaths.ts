@@ -15,9 +15,17 @@ function findPathsForTheGroups(
     const requiredIds = new Set<string>(getDefaultIds(project));
     const entries = g.getNodesWithoutIngoingEdges();
     groups.forEach((group) => {
-        const ids = new Set([...requiredIds, ...group.path]);
+        const ids = new Set([...requiredIds, ...group.requiredEvents]);
         entries.forEach((entry: GraphNode<Item>) => {
-            dfs(entry, ids, [], group.path, group._id, items, path_configs);
+            dfs(
+                entry,
+                ids,
+                [],
+                group.requiredEvents,
+                group._id,
+                items,
+                path_configs
+            );
         });
     });
 
@@ -26,7 +34,7 @@ function findPathsForTheGroups(
 function dfs(
     node: GraphNode<Item>,
     remainingIds: Set<string>,
-    path: string[],
+    path: Item[],
     extraIds: string[],
     groupId: number,
     items: Item[],
@@ -38,7 +46,7 @@ function dfs(
         return;
     }
 
-    const newPath = [...path, node.value._id];
+    const newPath = [...path, node.value];
     remainingIds.delete(node.value.eventId);
 
     if (remainingIds.size === 0) {
@@ -63,11 +71,7 @@ function dfs(
 
     remainingIds.add(node.value.eventId);
 }
-function getMaxAvailableCapacity(path: string[], items: Item[]): number {
-    return Math.min(
-        ...items
-            .filter((item) => path.includes(item._id))
-            .map((item) => item.groupCapazity)
-    );
+function getMaxAvailableCapacity(path: Item[]): number {
+    return Math.min(...path.map((item) => item.groupCapazity));
 }
 export { findPathsForTheGroups, getMaxAvailableCapacity };

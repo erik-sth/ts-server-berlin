@@ -13,7 +13,11 @@ describe('Groups class', () => {
 
         groups.add(path, studentId);
 
-        const expectedGroup: Group = { path, studentIds: [studentId], _id: 1 };
+        const expectedGroup: Group = {
+            requiredEvents: path,
+            studentIds: [studentId],
+            _id: 1,
+        };
         expect(groups.getAll()).toEqual([expectedGroup]);
     });
 
@@ -28,8 +32,8 @@ describe('Groups class', () => {
         groups.add(path2, studentId2);
 
         const expectedGroups: Group[] = [
-            { path: path1, studentIds: [studentId1], _id: 1 },
-            { path: path2, studentIds: [studentId2], _id: 2 },
+            { requiredEvents: path1, studentIds: [studentId1], _id: 1 },
+            { requiredEvents: path2, studentIds: [studentId2], _id: 2 },
         ];
         expect(groups.getAll()).toEqual(expectedGroups);
     });
@@ -42,7 +46,11 @@ describe('Groups class', () => {
 
         const retrievedGroup = groups.get(path);
 
-        const expectedGroup: Group = { path, studentIds: [studentId], _id: 1 };
+        const expectedGroup: Group = {
+            requiredEvents: path,
+            studentIds: [studentId],
+            _id: 1,
+        };
         expect(retrievedGroup).toEqual(expectedGroup);
     });
 

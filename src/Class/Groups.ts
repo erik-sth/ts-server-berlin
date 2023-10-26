@@ -8,14 +8,14 @@ class Groups {
 
     add(path: string[], studentId: string): void {
         const existingGroup = this.groups.find((group) =>
-            arraysHaveSameValues(group.path, path)
+            arraysHaveSameValues(group.requiredEvents, path)
         );
 
         if (existingGroup) {
             existingGroup.studentIds.push(studentId);
         } else {
             this.groups.push({
-                path,
+                requiredEvents: path,
                 studentIds: [studentId],
                 _id: this.groups.length + 1,
             });
@@ -28,7 +28,7 @@ class Groups {
 
     get(path: string[]): Group {
         return this.groups.find((group) =>
-            arraysHaveSameValues(group.path, path)
+            arraysHaveSameValues(group.requiredEvents, path)
         );
     }
 }
