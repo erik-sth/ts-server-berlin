@@ -1,4 +1,4 @@
-import axios, { AxiosError } from 'axios';
+import axios from 'axios';
 const apiKey = 'AIzaSyD0uFBrEpD6YHbEgZC8JfbKehO8a1nMCwY';
 const transportationMode: 'driving-car' | 'foot-walking' | 'transit' =
     'transit';
@@ -62,7 +62,7 @@ async function getTravelTime(
         } else {
             return null;
         }
-    } catch (error: any) {
+    } catch (error) {
         console.error('Error fetching travel time:', error.message);
         return null;
     }
