@@ -3,11 +3,14 @@ import { getItems } from '../src/data/Items';
 import { getPolls } from '../src/data/Polls';
 import { getProject } from '../src/data/Projects';
 import { getStudents } from '../src/data/Students';
+import * as fs from 'fs';
+
 const project = getProject();
 const projectId = project._id;
 const items = getItems(projectId);
 const students = getStudents(projectId);
 const polls = getPolls(projectId);
+
 // Benchmark settings
 const numIterations = 1000;
 const executionTimes: number[] = [];
@@ -40,3 +43,41 @@ if (numIterations % 2 === 0) {
 }
 
 console.log(`Middle Execution Time: ${middleValue} milliseconds`);
+
+// Save results to JSON file
+const benchmarkResults = {
+    algorithm: 'TimeDistribution', // Change this to your algorithm name
+    version: 'v1', // Change this to your algorithm version
+    numIterations,
+    executionTimes,
+    middleValue,
+    timestamp: new Date().toISOString(),
+};
+
+const resultsJson = JSON.stringify(benchmarkResults, null, 2);
+
+// Append results to the existing file or create a new file if it doesn't exist
+const resultsFilePath = 'results.json'; // Replace with your desired file name
+let existingResultsArray: any[] = [];
+
+if (fs.existsSync(resultsFilePath)) {
+    try {
+        const existingResults = fs.readFileSync(resultsFilePath, 'utf-8');
+        existingResultsArray = JSON.parse(existingResults);
+        if (!Array.isArray(existingResultsArray)) {
+            existingResultsArray = [];
+        }
+    } catch (error) {
+        console.error('Error parsing existing results:', error);
+        existingResultsArray = [];
+    }
+}
+
+existingResultsArray.push(benchmarkResults);
+
+fs.writeFileSync(
+    resultsFilePath,
+    JSON.stringify(existingResultsArray, null, 2)
+);
+
+console.log('Results saved to', resultsFilePath);
