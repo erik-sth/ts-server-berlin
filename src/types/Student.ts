@@ -1,5 +1,5 @@
 interface Student {
-  _id: string;
+    _id: string;
 }
 
 export default Student;
