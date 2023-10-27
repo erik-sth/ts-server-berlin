@@ -5,6 +5,15 @@ import { getProject } from '../src/data/Projects';
 import { getStudents } from '../src/data/Students';
 import * as fs from 'fs';
 
+interface BenchmarkResults {
+    algorithm: string;
+    version: string;
+    numIterations: number;
+    executionTimes: number[];
+    middleValue: number;
+    timestamp: string;
+}
+
 const project = getProject();
 const projectId = project._id;
 const items = getItems(projectId);
@@ -42,23 +51,16 @@ if (numIterations % 2 === 0) {
     middleValue = executionTimes[middleIndex];
 }
 
-console.log(`Middle Execution Time: ${middleValue} milliseconds`);
-
-// Save results to JSON file
-const benchmarkResults = {
-    algorithm: 'TimeDistribution', // Change this to your algorithm name
-    version: 'v1', // Change this to your algorithm version
+const benchmarkResults: BenchmarkResults = {
+    algorithm: 'TimeDistribution',
+    version: 'v1',
     numIterations,
     executionTimes,
     middleValue,
     timestamp: new Date().toISOString(),
 };
-
-const resultsJson = JSON.stringify(benchmarkResults, null, 2);
-
-// Append results to the existing file or create a new file if it doesn't exist
-const resultsFilePath = 'results.json'; // Replace with your desired file name
-let existingResultsArray: any[] = [];
+const resultsFilePath: string = 'results.json';
+let existingResultsArray: BenchmarkResults[] = [];
 
 if (fs.existsSync(resultsFilePath)) {
     try {
@@ -79,5 +81,3 @@ fs.writeFileSync(
     resultsFilePath,
     JSON.stringify(existingResultsArray, null, 2)
 );
-
-console.log('Results saved to', resultsFilePath);
