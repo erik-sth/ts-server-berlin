@@ -1,7 +1,6 @@
 import { DirectedGraph, GraphNode } from '../../Class/Graph';
 import { Group } from '../../Class/Groups';
 import Item from '../../types/Item';
-import { Path_config } from '../../types/Path_config';
 import Project from '../../types/Project';
 import { getDefaultIds } from './Utils';
 
@@ -10,27 +9,25 @@ function findPathsForTheGroups(
     items: Item[],
     g: DirectedGraph<Item>,
     project: Project
-): Path_config[] {
-    const path_configs: Path_config[] = [];
+): Group[] {
     const requiredIds = new Set<string>(getDefaultIds(project));
     const entries = g.getNodesWithoutIngoingEdges();
     groups.forEach((group) => {
-        const ids = new Set([...requiredIds, ...group.path]);
+        const ids = new Set([...requiredIds, ...group.requiredEvents]);
         entries.forEach((entry: GraphNode<Item>) => {
-            dfs(entry, ids, [], group.path, group._id, items, path_configs);
+            dfs(entry, ids, [], group.requiredEvents, group, items);
         });
     });
 
-    return path_configs;
+    return groups;
 }
 function dfs(
     node: GraphNode<Item>,
     remainingIds: Set<string>,
-    path: string[],
+    path: Item[],
     extraIds: string[],
-    groupId: number,
-    items: Item[],
-    path_configs: Path_config[]
+    group: Group,
+    items: Item[]
 ): void {
     const requiredIdsCopy = new Set(remainingIds);
 
@@ -38,36 +35,23 @@ function dfs(
         return;
     }
 
-    const newPath = [...path, node.value._id];
+    const newPath = [...path, node.value];
     remainingIds.delete(node.value.eventId);
 
     if (remainingIds.size === 0) {
-        path_configs.push({
-            groupId,
+        group.paths.push({
             path: newPath,
             valueForTestingStudentDistribution: 0,
         });
     } else if (node.edges !== null) {
         node.edges.forEach((edge) =>
-            dfs(
-                edge,
-                remainingIds,
-                newPath,
-                extraIds,
-                groupId,
-                items,
-                path_configs
-            )
+            dfs(edge, remainingIds, newPath, extraIds, group, items)
         );
     }
 
     remainingIds.add(node.value.eventId);
 }
-function getMaxAvailableCapacity(path: string[], items: Item[]): number {
-    return Math.min(
-        ...items
-            .filter((item) => path.includes(item._id))
-            .map((item) => item.groupCapazity)
-    );
+function getMaxAvailableCapacity(path: Item[]): number {
+    return Math.min(...path.map((item) => item.groupCapazity));
 }
 export { findPathsForTheGroups, getMaxAvailableCapacity };

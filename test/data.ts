@@ -12,6 +12,7 @@ const items: Item[] = [
         eventId: 'group1',
         studentIds: [],
         groupCapazity: 100,
+        updatedGroupCapacity: 100,
     },
     {
         _id: 'id2',
@@ -21,6 +22,7 @@ const items: Item[] = [
         eventId: 'group2',
         studentIds: [],
         groupCapazity: 50,
+        updatedGroupCapacity: 50,
     },
     {
         _id: 'id3',
@@ -30,6 +32,7 @@ const items: Item[] = [
         eventId: 'group3',
         studentIds: [],
         groupCapazity: 50,
+        updatedGroupCapacity: 50,
     },
     {
         _id: 'id4',
@@ -39,6 +42,7 @@ const items: Item[] = [
         eventId: 'solo3',
         studentIds: [],
         groupCapazity: 100,
+        updatedGroupCapacity: 100,
     },
     {
         _id: 'id5',
@@ -48,6 +52,7 @@ const items: Item[] = [
         eventId: 'group2',
         studentIds: [],
         groupCapazity: 50,
+        updatedGroupCapacity: 50,
     },
     {
         _id: 'id6',
@@ -57,6 +62,7 @@ const items: Item[] = [
         eventId: 'group1',
         studentIds: [],
         groupCapazity: 50,
+        updatedGroupCapacity: 50,
     },
     {
         _id: 'poll1',
@@ -66,6 +72,7 @@ const items: Item[] = [
         eventId: 'poll1',
         studentIds: [],
         groupCapazity: 100,
+        updatedGroupCapacity: 100,
     },
     {
         _id: 'id7',
@@ -75,6 +82,7 @@ const items: Item[] = [
         eventId: 'solo4',
         studentIds: [],
         groupCapazity: 100,
+        updatedGroupCapacity: 100,
     },
     {
         _id: 'id8',
@@ -84,6 +92,7 @@ const items: Item[] = [
         eventId: 'solo5',
         studentIds: [],
         groupCapazity: 100,
+        updatedGroupCapacity: 100,
     },
 
     {
@@ -94,6 +103,7 @@ const items: Item[] = [
         eventId: 'solo2',
         studentIds: [],
         groupCapazity: 100,
+        updatedGroupCapacity: 100,
     },
     {
         _id: 'id10',
@@ -103,6 +113,7 @@ const items: Item[] = [
         eventId: 'group3',
         studentIds: [],
         groupCapazity: 50,
+        updatedGroupCapacity: 50,
     },
     {
         _id: 'id11',
@@ -112,6 +123,7 @@ const items: Item[] = [
         eventId: 'poll2',
         studentIds: [],
         groupCapazity: 100,
+        updatedGroupCapacity: 100,
     },
 ];
 
