@@ -1,5 +1,5 @@
-import { Group } from '../types/Group';
 import { arraysHaveSameValues } from '../utils/array';
+import Group from './../types/Group';
 
 class Groups {
     private groups: Group[] = [];
@@ -18,6 +18,7 @@ class Groups {
                 requiredEvents: path,
                 studentIds: [studentId],
                 _id: this.groups.length + 1,
+                paths: [],
             });
         }
     }

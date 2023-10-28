@@ -1,7 +1,6 @@
-import { Group } from '../../Class/Groups';
 import { PriorityQueue } from '../../Class/PriorityQueue';
+import Group from '../../types/Group';
 import Item from '../../types/Item';
-import { Path_config } from '../../types/Path_config';
 import { getMaxAvailableCapacity } from './FindPaths';
 
 const MAX_ITERATIONS = 2000;
@@ -9,14 +8,16 @@ let currentIterationCount = 0;
 let failed = false;
 
 function createRecordOfCurrentUsedCapacity(
-    paths: Path_config[]
+    groups: Group[]
 ): Record<string, number> {
     const record: Record<string, number> = {};
-    paths.forEach((path) => {
-        path.path.forEach((pathItem) => {
-            record[pathItem._id] =
-                (record[pathItem._id] || 0) +
-                path.valueForTestingStudentDistribution;
+    groups.forEach((group) => {
+        group.paths.forEach((path) => {
+            path.path.forEach((pathItem) => {
+                record[pathItem._id] =
+                    (record[pathItem._id] || 0) +
+                    path.valueForTestingStudentDistribution;
+            });
         });
     });
     return record;
@@ -25,53 +26,40 @@ function createRecordOfCurrentUsedCapacity(
 function distributeStudentsToPaths(
     pq: PriorityQueue<Group>,
     items: Item[],
-    paths: Path_config[]
+    groups: Group[]
 ): void {
     while (!pq.isEmpty()) {
         const group = pq.dequeue();
         let amountStudentsRemaining = group.studentIds.length;
 
-        paths.forEach((path) => {
-            if (path.groupId === group._id && amountStudentsRemaining > 0) {
-                const min = Math.min(
-                    getMaxAvailableCapacity(path.path) -
-                        path.valueForTestingStudentDistribution,
-                    amountStudentsRemaining
-                );
-                amountStudentsRemaining -= min;
-                path.valueForTestingStudentDistribution
-                    ? (path.valueForTestingStudentDistribution = min)
-                    : (path.valueForTestingStudentDistribution += min);
-            }
+        group.paths.forEach((path) => {
+            const min = Math.min(
+                getMaxAvailableCapacity(path.path) -
+                    path.valueForTestingStudentDistribution,
+                amountStudentsRemaining
+            );
+            amountStudentsRemaining -= min;
+            path.valueForTestingStudentDistribution
+                ? (path.valueForTestingStudentDistribution = min)
+                : (path.valueForTestingStudentDistribution += min);
         });
     }
 
-    checkForExceedingGroupCapacities(paths, items);
+    checkForExceedingGroupCapacities(groups, items);
 }
 
-// function getCurrentMaxAvailableCapacity(
-//     path: string[],
-//     items: Item[],
-//     record: Record<string, number>
-// ): number {
-//     return Math.min(
-//         ...items
-//             .filter((item) => path.includes(item._id))
-//             .map((item) => item.groupCapazity - record[item._id])
-//     );
-// }
 function checkForExceedingGroupCapacities(
-    paths: Path_config[],
+    groups: Group[],
     items: Item[]
 ): void {
-    const record = createRecordOfCurrentUsedCapacity(paths);
+    const record = createRecordOfCurrentUsedCapacity(groups);
     items.forEach((item) => {
         if (record[item._id] > item.groupCapazity) {
             redistribute(
                 item,
                 record[item._id] - item.groupCapazity,
                 items,
-                paths
+                groups
             );
         }
     });
@@ -80,19 +68,15 @@ function redistribute(
     failedId: Item,
     excessStudents: number,
     items: Item[],
-    paths: Path_config[]
+    groups: Group[]
 ): boolean {
-    paths.forEach((path) => {
-        const alternativePaths = paths.filter(
-            (pathItem) =>
-                pathItem.groupId === path.groupId &&
-                !pathItem.path.includes(failedId)
+    groups.forEach((group) => {
+        const alternativePaths = group.paths.filter(
+            (pathItem) => !pathItem.path.includes(failedId)
         );
 
-        const failedGroupPaths = paths.filter(
-            (pathItem) =>
-                pathItem.groupId === path.groupId &&
-                pathItem.path.includes(failedId)
+        const failedGroupPaths = group.paths.filter((pathItem) =>
+            pathItem.path.includes(failedId)
         );
 
         if (failedGroupPaths.length !== 0 && excessStudents !== 0) {
@@ -120,12 +104,11 @@ function redistribute(
             });
         }
     });
-
     currentIterationCount++;
     if (currentIterationCount > MAX_ITERATIONS) {
         failed = true;
     } else {
-        checkForExceedingGroupCapacities(paths, items);
+        checkForExceedingGroupCapacities(groups, items);
     }
     return failed;
 }

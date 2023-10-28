@@ -3,13 +3,12 @@ import { PriorityQueue } from '../Class/PriorityQueue';
 import PollQuestion from '../types/Polls';
 import Student from '../types/Student';
 import createGraph from './TimeDistribution/CreateGraph';
-import { distributeStudentsToPaths } from './TimeDistribution/DistributeGroups';
+import { distributeStudentsToPaths } from './TimeDistribution/DistributeStudents';
 import { findPathsForTheGroups } from './TimeDistribution/FindPaths';
 import { getVotingIds } from './TimeDistribution/Utils';
 import { allocateGroupsToItems } from './TimeDistribution/AllocateGroupsToItems';
 import Item from '../types/Item';
 import Project from '../types/Project';
-import { Path_config } from '../types/Path_config';
 
 function buildGroupsByPaths(
     polls: PollQuestion[],
@@ -36,18 +35,13 @@ function main(
     project: Project,
     polls: PollQuestion[]
 ): Item[] {
-    const groups = buildGroupsByPaths(polls, students);
+    let groups = buildGroupsByPaths(polls, students);
     const g = createGraph(items);
-    const path_configs: Path_config[] = findPathsForTheGroups(
-        groups,
-        items,
-        g,
-        project
-    );
+    groups = findPathsForTheGroups(groups, items, g, project);
     const pq: PriorityQueue<Group> = createPQ(groups);
-    distributeStudentsToPaths(pq, items, path_configs);
+    distributeStudentsToPaths(pq, items, groups);
 
-    allocateGroupsToItems(path_configs, items, groups);
+    allocateGroupsToItems(items, groups);
 
     return items;
 }
