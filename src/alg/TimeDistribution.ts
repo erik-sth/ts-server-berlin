@@ -24,7 +24,7 @@ function buildGroupsByPaths(
 function createPQ(groups: Group[]): PriorityQueue<Group> {
     const pq = new PriorityQueue<Group>();
     groups.forEach((group) => {
-        pq.enqueue(group, group.requiredEvents.length);
+        pq.enqueue(group, group.paths.length);
     });
     return pq;
 }
