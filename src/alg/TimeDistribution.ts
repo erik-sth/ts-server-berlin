@@ -1,5 +1,5 @@
 import { Group, Groups } from '../Class/Groups';
-import { PriorityQueue } from '../Class/PriorityQueue';
+// import { PriorityQueue } from '../Class/PriorityQueue';
 import PollQuestion from '../types/Polls';
 import Student from '../types/Student';
 import createGraph from './TimeDistribution/CreateGraph';
@@ -21,14 +21,6 @@ function buildGroupsByPaths(
     return groups.getAll();
 }
 
-function createPQ(groups: Group[]): PriorityQueue<Group> {
-    const pq = new PriorityQueue<Group>();
-    groups.forEach((group) => {
-        pq.enqueue(group, group.paths.length);
-    });
-    return pq;
-}
-
 function main(
     items: Item[],
     students: Student[],
@@ -38,9 +30,7 @@ function main(
     let groups = buildGroupsByPaths(polls, students);
     const g = createGraph(items);
     groups = findPathsForTheGroups(groups, items, g, project);
-    const pq: PriorityQueue<Group> = createPQ(groups);
-    distributeStudentsToPaths(pq, items, groups);
-
+    distributeStudentsToPaths(items, groups);
     allocateGroupsToItems(items, groups);
 
     return items;

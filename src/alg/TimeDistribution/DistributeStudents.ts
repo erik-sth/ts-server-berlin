@@ -1,116 +1,79 @@
-import { PriorityQueue } from '../../Class/PriorityQueue';
-import Group from '../../types/Group';
 import Item from '../../types/Item';
-import { getMaxAvailableCapacity } from './FindPaths';
+import Group from './../../types/Group';
 
-const MAX_ITERATIONS = 2000;
-let currentIterationCount = 0;
-let failed = false;
+function distributeStudentsToPaths(items: Item[], groups: Group[]) {
+    setGroupsWithOnePath(groups, items);
+    const changableGroups = groups.filter((group) => group.paths.length > 1);
+    let relevantItems = findRelevantItems(items, changableGroups);
 
-function createRecordOfCurrentUsedCapacity(
-    groups: Group[]
-): Record<string, number> {
-    const record: Record<string, number> = {};
-    groups.forEach((group) => {
+    relevantItems = filterOutItemsWithoutCapacityProblems(
+        relevantItems,
+        amountRelevantStudents(changableGroups)
+    );
+    distributeWithMinimumCapacity(changableGroups, relevantItems);
+}
+
+function distributeWithMinimumCapacity(
+    changableGroups: Group[],
+    relevantItems: Item[]
+) {
+    changableGroups.forEach((group) => {
         group.paths.forEach((path) => {
-            path.path.forEach((pathItem) => {
-                record[pathItem._id] =
-                    (record[pathItem._id] || 0) +
-                    path.valueForTestingStudentDistribution;
+            const minCapacity = Math.min(
+                ...path.path.map((pathItem) => pathItem.updatedGroupCapacity)
+            );
+            path.valueForTestingStudentDistribution = minCapacity;
+            relevantItems.forEach((item) => {
+                if (path.path.includes(item)) {
+                    item.updatedGroupCapacity -= minCapacity;
+                }
             });
         });
     });
-    return record;
 }
 
-function distributeStudentsToPaths(
-    pq: PriorityQueue<Group>,
-    items: Item[],
-    groups: Group[]
-): void {
-    while (!pq.isEmpty()) {
-        const group = pq.dequeue();
-        let amountStudentsRemaining = group.studentIds.length;
+function amountRelevantStudents(changableGroups: Group[]) {
+    return changableGroups.reduce(
+        (total, group) => total + group.studentIds.length,
+        0
+    );
+}
 
-        group.paths.forEach((path) => {
-            const min = Math.min(
-                getMaxAvailableCapacity(path.path) -
-                    path.valueForTestingStudentDistribution,
-                amountStudentsRemaining
-            );
-            amountStudentsRemaining -= min;
-            path.valueForTestingStudentDistribution
-                ? (path.valueForTestingStudentDistribution = min)
-                : (path.valueForTestingStudentDistribution += min);
+function findRelevantItems(items: Item[], changableGroups: Group[]): Item[] {
+    return items.filter((item) => {
+        let counter = 0;
+        changableGroups.forEach((group) => {
+            group.paths.forEach((path) => {
+                if (path.path.includes(item)) {
+                    counter++;
+                }
+            });
         });
-    }
-
-    checkForExceedingGroupCapacities(groups, items);
-}
-
-function checkForExceedingGroupCapacities(
-    groups: Group[],
-    items: Item[]
-): void {
-    const record = createRecordOfCurrentUsedCapacity(groups);
-    items.forEach((item) => {
-        if (record[item._id] > item.groupCapazity) {
-            redistribute(
-                item,
-                record[item._id] - item.groupCapazity,
-                items,
-                groups
-            );
-        }
+        return counter > 0;
     });
 }
-function redistribute(
-    failedId: Item,
-    excessStudents: number,
-    items: Item[],
-    groups: Group[]
-): boolean {
+
+function filterOutItemsWithoutCapacityProblems(
+    relevantItems: Item[],
+    amountRelevantStudents: number
+) {
+    return relevantItems.filter(
+        (item) => item.updatedGroupCapacity < amountRelevantStudents
+    );
+}
+
+function setGroupsWithOnePath(groups: Group[], items: Item[]) {
     groups.forEach((group) => {
-        const alternativePaths = group.paths.filter(
-            (pathItem) => !pathItem.path.includes(failedId)
-        );
-
-        const failedGroupPaths = group.paths.filter((pathItem) =>
-            pathItem.path.includes(failedId)
-        );
-
-        if (failedGroupPaths.length !== 0 && excessStudents !== 0) {
-            failedGroupPaths.sort(
-                (a, b) =>
-                    b.valueForTestingStudentDistribution -
-                    a.valueForTestingStudentDistribution
-            );
-
-            failedGroupPaths.forEach((failedPath) => {
-                const removeCount =
-                    failedPath.valueForTestingStudentDistribution -
-                    excessStudents;
-                failedPath.valueForTestingStudentDistribution = removeCount;
-
-                let remainingExcessStudentsCount = excessStudents;
-
-                alternativePaths.forEach((alternativePath) => {
-                    alternativePath.valueForTestingStudentDistribution +=
-                        remainingExcessStudentsCount;
-                    remainingExcessStudentsCount = 0;
-                });
-
-                excessStudents = remainingExcessStudentsCount;
+        if (group.paths.length === 1) {
+            group.paths[0].valueForTestingStudentDistribution =
+                group.studentIds.length;
+            items.forEach((item) => {
+                if (group.paths[0].path.includes(item)) {
+                    item.updatedGroupCapacity -= group.studentIds.length;
+                }
             });
         }
     });
-    currentIterationCount++;
-    if (currentIterationCount > MAX_ITERATIONS) {
-        failed = true;
-    } else {
-        checkForExceedingGroupCapacities(groups, items);
-    }
-    return failed;
 }
 
 export { distributeStudentsToPaths };

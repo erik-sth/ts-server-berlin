@@ -20,7 +20,10 @@ console.timeEnd();
 
 // O(n * m);
 // getStudents(projectId).forEach((student) => {
-//   const length = findItemsByStudentId(student._id, getItems(projectId)).length;
-//   if (length != 0) return;
-//   console.log("\n" + student._id + ": " + length);
+//     const length = findItemsByStudentId(
+//         student._id,
+//         getItems(projectId)
+//     ).length;
+//     if (length != 0) return;
+//     console.log('\n' + student._id + ': ' + length);
 // });

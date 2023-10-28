@@ -52,8 +52,9 @@ if (numIterations % 2 === 0) {
 }
 
 const benchmarkResults: BenchmarkResults = {
-    algorithm: 'TimeDistribution updated paths into group',
-    version: 'v2',
+    algorithm:
+        'TimeDistribution impproved distribution proccess + small per updates',
+    version: 'v3.1',
     numIterations,
     executionTimes,
     middleValue,
