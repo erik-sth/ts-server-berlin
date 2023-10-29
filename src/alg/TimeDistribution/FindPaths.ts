@@ -8,9 +8,9 @@ function findPathsForTheGroups(
     groups: Group[],
     items: Item[],
     g: DirectedGraph<Item>,
-    project: Project
+    project: Project,
+    requiredIds: Set<string> = new Set<string>(getDefaultIds(project))
 ): Group[] {
-    const requiredIds = new Set<string>(getDefaultIds(project));
     const entries = g.getNodesWithoutIngoingEdges();
     groups.forEach((group) => {
         const ids = new Set([...requiredIds, ...group.requiredEvents]);
@@ -21,6 +21,7 @@ function findPathsForTheGroups(
 
     return groups;
 }
+
 function dfs(
     node: GraphNode<Item>,
     remainingIds: Set<string>,
@@ -51,7 +52,9 @@ function dfs(
 
     remainingIds.add(node.value.eventId);
 }
+
 function getMaxAvailableCapacity(path: Item[]): number {
     return Math.min(...path.map((item) => item.groupCapazity));
 }
+
 export { findPathsForTheGroups, getMaxAvailableCapacity };
