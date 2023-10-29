@@ -54,7 +54,7 @@ if (numIterations % 2 === 0) {
 const benchmarkResults: BenchmarkResults = {
     algorithm:
         'TimeDistribution impproved distribution proccess + small per updates',
-    version: 'v3.1',
+    version: 'v3.2',
     numIterations,
     executionTimes,
     middleValue,
