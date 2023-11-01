@@ -32,8 +32,3 @@ To start the project, use:
 ```bash
 npm start
 ```
-
-
-Provide step-by-step instructions on how to install and set up the project.
-
-
