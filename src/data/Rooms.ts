@@ -1,3 +1,4 @@
+import Project from '../types/Project';
 import Room from '../types/Room';
 
 const rooms: Room[] = [
@@ -199,4 +200,14 @@ const rooms: Room[] = [
         studentIds: ['person97', 'person98', 'person99', 'person100'],
     },
 ];
-export { rooms };
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function getRooms(project: Project) {
+    return rooms;
+}
+function getRoom(project: Project, studentId: string): Room {
+    return rooms.find((room) => {
+        room.studentIds.includes(studentId);
+    });
+}
+export { rooms, getRooms, getRoom };
