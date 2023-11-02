@@ -1,4 +1,7 @@
-# Project Name
+# Berlin Project
+
+Distribute Students to their paths in a timeTable
+
 ## Commands
 
 ### Installation
