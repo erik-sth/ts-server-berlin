@@ -1,4 +1,4 @@
-import { DirectedGraph } from '../src/Class/Graph'; // Replace with your actual file path
+import { DirectedGraph } from '../../src/Class/Graph'; // Replace with your actual file path
 
 describe('DirectedGraph', () => {
     it('should add nodes correctly', () => {

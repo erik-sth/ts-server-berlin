@@ -1,4 +1,4 @@
-import { Groups, Group } from '../src/Class/Groups';
+import { Groups, Group } from '../../src/Class/Groups';
 
 describe('Groups class', () => {
     let groups: Groups;
