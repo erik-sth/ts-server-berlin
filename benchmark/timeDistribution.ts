@@ -52,9 +52,8 @@ if (numIterations % 2 === 0) {
 }
 
 const benchmarkResults: BenchmarkResults = {
-    algorithm:
-        'TimeDistribution impproved distribution proccess + small per updates',
-    version: 'v3.2',
+    algorithm: 'TimeDistribution prioritize Roommates',
+    version: 'v3.3',
     numIterations,
     executionTimes,
     middleValue,
