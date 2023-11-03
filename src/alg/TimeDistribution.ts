@@ -31,8 +31,7 @@ function main(
     const g = createGraph(items);
     groups = findPathsForTheGroups(groups, items, g, project);
     distributeStudentsToPaths(items, groups);
-    allocateGroupsToItems(items, groups);
-
+    allocateGroupsToItems(items, groups, project);
     return items;
 }
 
