@@ -206,8 +206,6 @@ function getRooms(project: Project) {
     return rooms;
 }
 function getRoom(project: Project, studentId: string): Room {
-    return rooms.find((room) => {
-        room.studentIds.includes(studentId);
-    });
+    return rooms.find((room) => room.studentIds.includes(studentId));
 }
 export { rooms, getRooms, getRoom };
