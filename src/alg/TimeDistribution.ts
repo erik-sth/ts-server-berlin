@@ -26,13 +26,15 @@ function main(
     students: Student[],
     project: Project,
     polls: PollQuestion[]
-): Item[] {
-    let groups = buildGroupsByPaths(polls, students);
+): boolean {
+    const groups = buildGroupsByPaths(polls, students);
     const g = createGraph(items);
-    groups = findPathsForTheGroups(groups, items, g, project);
-    distributeStudentsToPaths(items, groups);
+    const res = findPathsForTheGroups(groups, items, g, project);
+    if (!res) return false;
+    const res2 = distributeStudentsToPaths(items, groups);
+    if (!res2) return false;
     allocateGroupsToItems(items, groups, project);
-    return items;
+    return true;
 }
 
 export { main, getVotingIds };

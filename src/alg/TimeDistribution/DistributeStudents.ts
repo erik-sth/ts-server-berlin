@@ -10,26 +10,33 @@ function distributeStudentsToPaths(items: Item[], groups: Group[]) {
         relevantItems,
         amountRelevantStudents(changableGroups)
     );
-    distributeWithMinimumCapacity(changableGroups, relevantItems);
+    return distributeWithMinimumCapacity(changableGroups, relevantItems);
 }
 
 function distributeWithMinimumCapacity(
     changableGroups: Group[],
     relevantItems: Item[]
 ) {
+    let working = true;
     changableGroups.forEach((group) => {
+        let amountStudents = group.studentIds.length;
         group.paths.forEach((path) => {
             const minCapacity = Math.min(
-                ...path.path.map((pathItem) => pathItem.updatedGroupCapacity)
+                ...path.path.map((pathItem) => pathItem.updatedGroupCapacity),
+                group.studentIds.length
             );
             path.valueForTestingStudentDistribution = minCapacity;
+            amountStudents -= minCapacity;
             relevantItems.forEach((item) => {
                 if (path.path.includes(item)) {
                     item.updatedGroupCapacity -= minCapacity;
                 }
             });
         });
+
+        if (amountStudents > 0) working = false;
     });
+    return working;
 }
 
 function amountRelevantStudents(changableGroups: Group[]) {

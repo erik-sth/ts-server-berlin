@@ -10,16 +10,18 @@ function findPathsForTheGroups(
     g: DirectedGraph<Item>,
     project: Project,
     requiredIds: Set<string> = new Set<string>(getDefaultIds(project))
-): Group[] {
+): boolean {
     const entries = g.getNodesWithoutIngoingEdges();
     groups.forEach((group) => {
         const ids = new Set([...requiredIds, ...group.requiredEvents]);
         entries.forEach((entry: GraphNode<Item>) => {
             dfs(entry, ids, [], group.requiredEvents, group, items);
         });
+        if (group.paths.length == 0) {
+            return false;
+        }
     });
-
-    return groups;
+    return true;
 }
 
 function dfs(
