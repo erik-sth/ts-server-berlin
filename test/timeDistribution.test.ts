@@ -5,9 +5,11 @@ import {
     getVotingIds,
 } from '../src/alg/TimeDistribution/Utils';
 import { items, polls, students, project } from './data';
+import { items as failedItems } from './failData';
 
 describe('Time Distribution Algorithm', () => {
-    const allocationResult = main(items, students, project, polls);
+    main(items, students, project, polls);
+    const allocationResult = items;
 
     it('should allocate the correct number of items to each student', () => {
         const requiredIdsLength = getDefaultIds(project).length;
@@ -85,5 +87,9 @@ describe('Time Distribution Algorithm', () => {
                 expect(studentsInGroup).toBeLessThanOrEqual(groupSize);
             }
         });
+    });
+    it('should return false when no solution is found', () => {
+        const result = main(failedItems, students, project, polls);
+        expect(result).toBe(false);
     });
 });
