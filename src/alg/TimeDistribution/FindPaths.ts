@@ -11,7 +11,7 @@ function findPathsForTheGroups(
     project: Project,
     requiredIds: Set<string> = new Set<string>(getDefaultIds(project))
 ): boolean {
-    const entries = g.getNodesWithoutIngoingEdges();
+    const entries = g.getNodesWithIndegreeZero();
     groups.forEach((group) => {
         const ids = new Set([...requiredIds, ...group.requiredEvents]);
         entries.forEach((entry: GraphNode<Item>) => {
