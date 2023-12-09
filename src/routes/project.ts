@@ -1,12 +1,18 @@
 import express, { Request, Response } from 'express';
 import { Project, validateSchema } from '../models/project';
 import _ from 'lodash';
+import { isValidObjectId } from 'mongoose';
 const router = express.Router();
 
 router.get('/:id?', async (req: Request, res: Response) => {
+    if (req.params.id && !isValidObjectId(req.params.id)) {
+        return res.status(400).send('Invalid ObjectId');
+    }
+
     const data = req.params.id
         ? await Project.findById(req.params.id)
         : await Project.find();
+
     res.send(data);
 });
 router.post('/', async (req: Request, res: Response) => {
@@ -36,7 +42,8 @@ router.post('/', async (req: Request, res: Response) => {
 });
 
 router.delete('/:id', async (req: Request, res: Response) => {
-    if (req.params.id == undefined) return res.status(400).send('Missing Id');
+    if (req.params.id && !isValidObjectId(req.params.id))
+        return res.status(400).send('Missing Id');
     try {
         const project = await Project.findByIdAndDelete(req.params.id);
         if (!project) {
