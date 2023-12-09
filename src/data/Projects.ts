@@ -17,7 +17,11 @@ const berlin: Project = {
     reasonForFailing: '',
     failed: false,
 };
-function getProject(): Project {
-    return berlin;
+const projects = [berlin];
+
+function getProjects(projectId?: string) {
+    if (projectId) return projects.find((p) => p._id === projectId);
+    else return projects;
 }
-export { getProject };
+
+export { getProjects };
