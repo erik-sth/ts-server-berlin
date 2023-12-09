@@ -68,7 +68,7 @@ function main(
     if (project.failed) return false;
 
     project.status = 'Distributing';
-    distributeStudentsToPaths(items, groups);
+    distributeStudentsToPaths(items, groups, project);
     if (project.failed) return false;
 
     project.status = 'Allocating';

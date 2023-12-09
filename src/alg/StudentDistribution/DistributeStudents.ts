@@ -1,7 +1,12 @@
 import Item from '../../types/Item';
 import Group from '../../types/Group';
+import Project from '../../types/Project';
 
-function distributeStudentsToPaths(items: Item[], groups: Group[]) {
+function distributeStudentsToPaths(
+    items: Item[],
+    groups: Group[],
+    project: Project
+) {
     setGroupsWithOnePath(groups, items);
     const changableGroups = groups.filter((group) => group.paths.length > 1);
     let relevantItems = findRelevantItems(items, changableGroups);
@@ -10,12 +15,17 @@ function distributeStudentsToPaths(items: Item[], groups: Group[]) {
         relevantItems,
         amountRelevantStudents(changableGroups)
     );
-    return distributeWithMinimumCapacity(changableGroups, relevantItems);
+    return distributeWithMinimumCapacity(
+        changableGroups,
+        relevantItems,
+        project
+    );
 }
 
 function distributeWithMinimumCapacity(
     changableGroups: Group[],
-    relevantItems: Item[]
+    relevantItems: Item[],
+    project: Project
 ) {
     let working = true;
     changableGroups.forEach((group) => {
@@ -34,7 +44,11 @@ function distributeWithMinimumCapacity(
             });
         });
 
-        if (amountStudents > 0) working = false;
+        if (amountStudents > 0) {
+            working = false;
+            project.failed = true;
+            project.reasonForFailing = 'Students left after distribution done';
+        }
     });
     return working;
 }
