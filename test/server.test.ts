@@ -1,14 +1,16 @@
 import supertest, { SuperTest, Test } from 'supertest';
 import { server } from '../src/server';
+import mongoose from 'mongoose';
 
 describe('Server Tests', () => {
     let app: SuperTest<Test>;
 
-    beforeAll( () => {
+    beforeAll(() => {
         app = supertest(server);
     });
 
-    afterAll( () => {
+    afterAll(async () => {
+        await mongoose.connection.close();
         server.close();
     });
 

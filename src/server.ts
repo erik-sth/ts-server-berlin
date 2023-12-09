@@ -1,7 +1,5 @@
 import express, { Express } from 'express';
 import { configureCors } from './startup/cors';
-import bodyParser from 'body-parser';
-
 import isOnline from './routes/isOnline';
 import project from './routes/project';
 import connectToDatabase from './startup/db';
@@ -12,7 +10,7 @@ const app: Express = express();
 configureCors(app);
 connectToDatabase();
 
-app.use(bodyParser.json());
+app.use(express.json());
 app.use('/', isOnline);
 app.use('/project', project);
 

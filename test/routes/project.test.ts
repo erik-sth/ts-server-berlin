@@ -1,5 +1,6 @@
 import supertest, { SuperTest, Test } from 'supertest';
 import { server } from '../../src/server';
+import mongoose from 'mongoose';
 
 describe('Project Routes Tests', () => {
     let app: SuperTest<Test>;
@@ -8,7 +9,8 @@ describe('Project Routes Tests', () => {
         app = supertest(server);
     });
 
-    afterAll(() => {
+    afterAll(async () => {
+        await mongoose.connection.close();
         server.close();
     });
 
@@ -33,7 +35,6 @@ describe('Project Routes Tests', () => {
     it('should get all projects', async () => {
         const response = await app.get('/project');
         expect(response.status).toBe(200);
-        // Assuming the response body is an array of projects
         const projects = response.body;
         expect(projects.length).toBeGreaterThan(0);
 
