@@ -3,11 +3,11 @@ import PollQuestion from '../types/Polls';
 
 import Student from '../types/Student';
 
-import createGraph from './TimeDistribution/CreateGraph';
-import { distributeStudentsToPaths } from './TimeDistribution/DistributeStudents';
-import { findPathsForTheGroups } from './TimeDistribution/FindPaths';
-import { getVotingIds } from './TimeDistribution/Utils';
-import { allocateGroupsToItems } from './TimeDistribution/AllocateGroupsToItems';
+import createGraph from './StudentDistribution/CreateGraph';
+import { distributeStudentsToPaths } from './StudentDistribution/DistributeStudents';
+import { findPathsForTheGroups } from './StudentDistribution/FindPaths';
+import { getVotingIds } from './StudentDistribution/Utils';
+import { allocateGroupsToItems } from './StudentDistribution/AllocateGroupsToItems';
 import Item from '../types/Item';
 import Project from '../types/Project';
 import Room from '../types/Room';

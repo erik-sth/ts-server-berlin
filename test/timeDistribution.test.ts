@@ -1,9 +1,9 @@
-import { main } from '../src/alg/TimeDistribution';
+import { main } from '../src/alg/StudentDistribution';
 import {
     findItemsByStudentId,
     getDefaultIds,
     getVotingIds,
-} from '../src/alg/TimeDistribution/Utils';
+} from '../src/alg/StudentDistribution/Utils';
 import { items, polls, students, project } from './data';
 import { items as failedItems } from './failData';
 

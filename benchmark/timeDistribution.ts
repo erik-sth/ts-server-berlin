@@ -1,4 +1,4 @@
-import { main } from '../src/alg/TimeDistribution';
+import { main } from '../src/alg/StudentDistribution';
 import { getItems } from '../src/data/Items';
 import { getPolls } from '../src/data/Polls';
 import { getProject } from '../src/data/Projects';

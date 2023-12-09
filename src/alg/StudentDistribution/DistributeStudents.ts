@@ -1,5 +1,5 @@
 import Item from '../../types/Item';
-import Group from './../../types/Group';
+import Group from '../../types/Group';
 
 function distributeStudentsToPaths(items: Item[], groups: Group[]) {
     setGroupsWithOnePath(groups, items);

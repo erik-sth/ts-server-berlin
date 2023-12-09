@@ -1,4 +1,4 @@
-import { main } from './alg/TimeDistribution';
+import { main } from './alg/StudentDistribution';
 import { getItems } from './data/Items';
 import { getStudents } from './data/Students';
 import { getPolls } from './data/Polls';
