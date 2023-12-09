@@ -13,6 +13,9 @@ const berlin: Project = {
         'solo5',
     ],
     relatedPolls: ['id0', 'id1'],
+    status: 'WaitingForWorker',
+    reasonForFailing: '',
+    failed: false,
 };
 function getProject(): Project {
     return berlin;

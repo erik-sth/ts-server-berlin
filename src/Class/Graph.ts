@@ -9,6 +9,7 @@ class GraphNode<T> {
 
 class DirectedGraph<T> {
     nodes: GraphNode<T>[] = [];
+    lengthEdges: number;
 
     addNode(value: T): GraphNode<T> {
         const NEW_NODE = new GraphNode(value);
@@ -17,6 +18,7 @@ class DirectedGraph<T> {
     }
 
     addEdge(from: GraphNode<T>, to: GraphNode<T>): void {
+        this.lengthEdges++;
         from.edges.push(to);
     }
 
@@ -39,12 +41,18 @@ class DirectedGraph<T> {
         return this.nodes.find((node) => node.value === value);
     }
     removeEdge(from: GraphNode<T>, to: GraphNode<T>): void {
+        this.lengthEdges--;
         const index = from.edges.indexOf(to);
         if (index !== -1) {
             from.edges.splice(index, 1);
         }
     }
-
+    sizeEdges(): number {
+        return this.lengthEdges;
+    }
+    sizeNodes(): number {
+        return this.nodes.length;
+    }
     getNodesWithIndegreeZero(): GraphNode<T>[] {
         // Create a map to keep track of incoming edge counts for each node.
         const inDegreeMap = new Map<GraphNode<T>, number>();

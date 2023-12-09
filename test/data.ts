@@ -215,6 +215,9 @@ export { polls };
 const project: Project = {
     _id: 'ProjectId',
     name: 'Berlin 2024',
+    failed: false,
+    reasonForFailing: '',
+    status: 'WaitingForWorker',
     idsThatAreRequiredForEveryone: [
         'group1',
         'group2',

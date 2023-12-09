@@ -224,6 +224,9 @@ const project: Project = {
         'solo4',
         'solo5',
     ],
+    failed: false,
+    status: 'WaitingForWorker',
+    reasonForFailing: '',
     relatedPolls: ['id0', 'id1'],
 };
 

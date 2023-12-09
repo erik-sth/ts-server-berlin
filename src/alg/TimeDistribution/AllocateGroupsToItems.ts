@@ -9,7 +9,6 @@ function allocateGroupsToItems(
     project: Project
 ): void {
     items.forEach((item) => (item.studentIds = []));
-
     groups.forEach((group) => {
         const rooms = findRoommatesInGroup(group, project);
         group.paths.forEach((path_config) => {
