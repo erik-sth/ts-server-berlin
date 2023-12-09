@@ -1,7 +1,7 @@
-import PollQuestion from '../src/types/Polls';
-import Student from '../src/types/Student';
-import Item from '../src/types/Item';
-import Project from '../src/types/Project';
+import PollQuestion from '../../src/types/Polls';
+import Student from '../../src/types/Student';
+import Item from '../../src/types/Item';
+import Project from '../../src/types/Project';
 
 const items: Item[] = [
     {
