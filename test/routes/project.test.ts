@@ -15,10 +15,10 @@ describe('Project Routes Tests', () => {
     });
 
     it('should get projects when GET /:id', async () => {
-        const response = await app.get('/project/6574e248ed4efbe66d836229');
+        const response = await app.get('/project/65750b72771d33966c6da5cc');
         expect(response.status).toBe(200);
         expect(response.body.name).toEqual('GetSpecialId');
-        expect(response.body._id).toEqual('6574e248ed4efbe66d836229');
+        expect(response.body._id).toEqual('65750b72771d33966c6da5cc');
     });
 
     it('should create a project when POST /', async () => {

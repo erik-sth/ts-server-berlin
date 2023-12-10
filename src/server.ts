@@ -4,6 +4,8 @@ import isOnline from './routes/isOnline';
 import project from './routes/project';
 import connectToDatabase from './startup/db';
 import addRateLimiter from './startup/limitRate';
+import * as dotenv from 'dotenv';
+dotenv.config();
 
 const app: Express = express();
 
