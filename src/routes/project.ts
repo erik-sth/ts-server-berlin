@@ -2,16 +2,17 @@ import express, { Request, Response } from 'express';
 import { Project, validateSchema } from '../models/project';
 import _ from 'lodash';
 import { isValidObjectId } from 'mongoose';
+import { paginate, PaginationRequest } from '../middleware/pagination';
 const router = express.Router();
 
-router.get('/:id?', async (req: Request, res: Response) => {
+router.get('/:id?', paginate, async (req: PaginationRequest, res: Response) => {
     if (req.params.id && !isValidObjectId(req.params.id)) {
         return res.status(400).send('Invalid ObjectId');
     }
 
     const data = req.params.id
         ? await Project.findById(req.params.id)
-        : await Project.find();
+        : await Project.find().limit(req.limit);
 
     res.send(data);
 });
