@@ -3,12 +3,14 @@ import { configureCors } from './startup/cors';
 import isOnline from './routes/isOnline';
 import project from './routes/project';
 import connectToDatabase from './startup/db';
+import addRateLimiter from './startup/limitRate';
 
 const app: Express = express();
 
 // startup
 configureCors(app);
 connectToDatabase();
+addRateLimiter(app);
 
 app.use(express.json());
 app.use('/', isOnline);
