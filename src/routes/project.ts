@@ -16,18 +16,32 @@ router.get('/:id?', paginate, async (req: PaginationRequest, res: Response) => {
 
     res.send(data);
 });
-router.post('/', async (req: Request, res: Response) => {
+
+router.post('/', async (req: PaginationRequest, res: Response) => {
     const { error } = validateSchema(req.body);
+
     if (error) {
         res.status(400).send(error.message);
         return;
     }
-    let project = await Project.findOne(_.pick(req.body, ['name']));
-    if (project) {
-        res.status(400);
-        return res.send('Project already exists.');
+
+    // Sanitize and validate user-controlled data
+    const projectName = req.body.name;
+    if (!projectName) {
+        res.status(400).send('Project name is required.');
+        return;
     }
-    project = new Project(
+
+    // Check if the project with the given name already exists
+    const existingProject = await Project.findOne({ name: projectName });
+
+    if (existingProject) {
+        res.status(400).send('Project already exists.');
+        return;
+    }
+
+    // If the project doesn't exist, proceed to create it
+    const project = new Project(
         _.pick(req.body, [
             'status',
             'name',
@@ -37,9 +51,14 @@ router.post('/', async (req: Request, res: Response) => {
         ])
     );
     project.failed = false;
-    await project.save();
 
-    res.send({ data: project });
+    try {
+        await project.save();
+        res.send({ data: project });
+    } catch (saveError) {
+        console.error(saveError);
+        res.status(500).send('Internal Server Error');
+    }
 });
 
 router.delete('/:id', async (req: Request, res: Response) => {
