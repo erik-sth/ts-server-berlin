@@ -2,9 +2,11 @@ name: Build and Test
 
 on:
     push:
-        branches: ['main']
+        branches:
+            - main
     pull_request:
-        branches: ['main']
+        branches:
+            - main
 
 jobs:
     test:
@@ -27,8 +29,11 @@ jobs:
             - name: Install dependencies
               run: npm ci
 
-            - name: Set up environment variables
-              run: echo "MONGODB_URI=${{ secrets.MONGODB_URI }}" >> $GITHUB_ENV
+            - name: Set up environment variables for testing
+              run: echo "ENVIRONMENT=testing" >> $GITHUB_ENV
+              env:
+                  API_KEY: ${{ secrets.TEST_API_KEY }}
+                  DATABASE_PASSWORD: ${{ secrets.TEST_DATABASE_PASSWORD }}
 
             - name: Build
               run: npm run build
