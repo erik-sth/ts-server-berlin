@@ -19,9 +19,10 @@ const berlin: Project = {
 };
 const projects = [berlin];
 
-function getProjects(projectId?: string) {
-    if (projectId) return projects.find((p) => p._id === projectId);
-    else return projects;
+function getProjects(): Project[] {
+    return projects;
 }
-
-export { getProjects };
+function getProject(projectId: string): Project {
+    return projects.find((p) => p._id === projectId);
+}
+export { getProjects, getProject };

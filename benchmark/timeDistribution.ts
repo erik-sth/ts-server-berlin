@@ -14,7 +14,7 @@ interface BenchmarkResults {
     timestamp: string;
 }
 
-const project = getProject();
+const project = getProject('projectId1');
 const projectId = project._id;
 const items = getItems(projectId);
 const students = getStudents(projectId);
