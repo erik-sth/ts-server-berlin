@@ -1,16 +1,18 @@
-import { main } from '../src/alg/TimeDistribution';
+import { main } from '../../src/alg/StudentDistribution';
 import {
     findItemsByStudentId,
     getDefaultIds,
     getVotingIds,
-} from '../src/alg/TimeDistribution/Utils';
+} from '../../src/alg/StudentDistribution/Utils';
 import { items, polls, students, project } from './data';
 import { items as failedItems } from './failData';
 
 describe('Time Distribution Algorithm', () => {
     main(items, students, project, polls);
     const allocationResult = items;
-
+    it('should be on status finishedCalc', () => {
+        expect(project.status).toEqual('FinishedCalc');
+    });
     it('should allocate the correct number of items to each student', () => {
         const requiredIdsLength = getDefaultIds(project).length;
 
@@ -90,6 +92,8 @@ describe('Time Distribution Algorithm', () => {
     });
     it('should return false when no solution is found', () => {
         const result = main(failedItems, students, project, polls);
+        expect(project.status).toBe('Distributing');
+        expect(project.failed).toBe(true);
         expect(result).toBe(false);
     });
 });

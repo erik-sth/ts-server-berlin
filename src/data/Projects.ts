@@ -1,4 +1,4 @@
-import { Project } from '../../test/data';
+import { Project } from '../../test/alg/data';
 
 const berlin: Project = {
     _id: 'projectId1',
@@ -13,8 +13,16 @@ const berlin: Project = {
         'solo5',
     ],
     relatedPolls: ['id0', 'id1'],
+    status: 'WaitingForWorker',
+    reasonForFailing: '',
+    failed: false,
 };
-function getProject(): Project {
-    return berlin;
+const projects = [berlin];
+
+function getProjects(): Project[] {
+    return projects;
 }
-export { getProject };
+function getProject(projectId: string): Project {
+    return projects.find((p) => p._id === projectId);
+}
+export { getProjects, getProject };

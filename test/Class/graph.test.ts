@@ -96,7 +96,7 @@ describe('DirectedGraph', () => {
         graph.addEdge(nodeA, nodeB);
         graph.addEdge(nodeB, nodeC);
 
-        const result = graph.getNodesWithoutIngoingEdges();
+        const result = graph.getNodesWithIndegreeZero();
 
         expect(result).toContain(nodeA);
         expect(result).not.toContain(nodeB);

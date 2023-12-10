@@ -1,4 +1,4 @@
-import { main } from '../src/alg/TimeDistribution';
+import { main } from '../src/alg/StudentDistribution';
 import { getItems } from '../src/data/Items';
 import { getPolls } from '../src/data/Polls';
 import { getProject } from '../src/data/Projects';
@@ -14,7 +14,7 @@ interface BenchmarkResults {
     timestamp: string;
 }
 
-const project = getProject();
+const project = getProject('projectId1');
 const projectId = project._id;
 const items = getItems(projectId);
 const students = getStudents(projectId);

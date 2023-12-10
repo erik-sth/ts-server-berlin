@@ -1,9 +1,10 @@
 import { DirectedGraph } from '../../Class/Graph';
 import Item from '../../types/Item';
+import Project from '../../types/Project';
 
 const MAX_TIME_DIFFERENCE_MS = 6 * 60 * 60 * 1000; // 6 hours in milliseconds
 
-function createGraph(items: Item[]): DirectedGraph<Item> {
+function createGraph(items: Item[], project: Project): DirectedGraph<Item> {
     const G = new DirectedGraph<Item>();
     items.forEach((element) => {
         G.addNode(element);
@@ -21,6 +22,10 @@ function createGraph(items: Item[]): DirectedGraph<Item> {
             if (nodeB) G.addEdge(node, nodeB);
         });
     });
+    if (G.sizeEdges() === 0) {
+        project.failed = true;
+        project.reasonForFailing = 'Graph build failed: ZeroEdges';
+    }
     return G;
 }
 

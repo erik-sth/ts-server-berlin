@@ -5,7 +5,9 @@ class Groups {
     private groups: Group[] = [];
 
     constructor() {}
-
+    size(): number {
+        return this.groups.length;
+    }
     add(path: string[], studentId: string): void {
         const existingGroup = this.groups.find((group) =>
             arraysHaveSameValues(group.requiredEvents, path)

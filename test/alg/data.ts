@@ -1,7 +1,7 @@
-import PollQuestion from '../src/types/Polls';
-import Student from '../src/types/Student';
-import Item from '../src/types/Item';
-import Project from '../src/types/Project';
+import PollQuestion from '../../src/types/Polls';
+import Student from '../../src/types/Student';
+import Item from '../../src/types/Item';
+import Project from '../../src/types/Project';
 
 const items: Item[] = [
     {
@@ -41,8 +41,8 @@ const items: Item[] = [
         endTime: new Date(2023, 8, 17, 12, 0),
         eventId: 'solo3',
         studentIds: [],
-        groupCapazity: 20,
-        updatedGroupCapacity: 20,
+        groupCapazity: 100,
+        updatedGroupCapacity: 100,
     },
     {
         _id: 'id5',
@@ -91,8 +91,8 @@ const items: Item[] = [
         endTime: new Date(2023, 8, 19, 10, 30),
         eventId: 'solo5',
         studentIds: [],
-        groupCapazity: 2,
-        updatedGroupCapacity: 2,
+        groupCapazity: 100,
+        updatedGroupCapacity: 100,
     },
 
     {
@@ -215,6 +215,9 @@ export { polls };
 const project: Project = {
     _id: 'ProjectId',
     name: 'Berlin 2024',
+    failed: false,
+    reasonForFailing: '',
+    status: 'WaitingForWorker',
     idsThatAreRequiredForEveryone: [
         'group1',
         'group2',
