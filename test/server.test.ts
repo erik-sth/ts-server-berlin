@@ -1,17 +1,18 @@
 import supertest, { SuperTest, Test } from 'supertest';
 import { server } from '../src/server';
-import mongoose from 'mongoose';
+import { startDb, stopDB } from './fakeDb';
 
 describe('Server Tests', () => {
     let app: SuperTest<Test>;
 
-    beforeAll(() => {
+    beforeAll(async () => {
         app = supertest(server);
+        await startDb();
     });
 
     afterAll(async () => {
-        await mongoose.connection.close();
         server.close();
+        await stopDB();
     });
 
     it('should respond with status 200 for the root route', async () => {

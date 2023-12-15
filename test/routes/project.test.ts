@@ -1,16 +1,19 @@
 import supertest, { SuperTest, Test } from 'supertest';
 import { server } from '../../src/server';
-import mongoose from 'mongoose';
+import { seedProjectRoute } from '../seed';
+import { startDb, stopDB } from '../fakeDb';
 
 describe('Project Routes Tests', () => {
     let app: SuperTest<Test>;
     let id = '';
-    beforeAll(() => {
+    beforeAll(async () => {
         app = supertest(server);
+        await startDb();
+        seedProjectRoute();
     });
 
     afterAll(async () => {
-        await mongoose.connection.close();
+        await stopDB();
         server.close();
     });
 
