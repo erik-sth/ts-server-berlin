@@ -12,9 +12,9 @@ function allocateGroupsToItems(
     groups.forEach((group) => {
         const rooms = findRoommatesInGroup(group, project);
         group.paths.forEach((path_config) => {
-            if (path_config.valueForTestingStudentDistribution !== 0) {
+            if (path_config.testValueForDistributingStudents !== 0) {
                 let studentsCount =
-                    path_config.valueForTestingStudentDistribution;
+                    path_config.testValueForDistributingStudents;
 
                 while (studentsCount > 0) {
                     let room = rooms.shift();
@@ -25,7 +25,7 @@ function allocateGroupsToItems(
                         rooms.push(secondPart);
                     }
 
-                    allocateToItems(path_config.path, items, room);
+                    allocateToItems(path_config.itemsInPath, items, room);
                     studentsCount -= room.length;
                 }
             }

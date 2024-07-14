@@ -5,7 +5,7 @@
             "type": "node",
             "request": "launch",
             "name": "Debug TypeScript",
-            "program": "${workspaceFolder}/src/index.ts",
+            "program": "${workspaceFolder}/src/alg/test.ts",
             "preLaunchTask": "tsc: build - tsconfig.json",
             "outFiles": ["${workspaceFolder}/dist/**/*.js"],
             "sourceMaps": true

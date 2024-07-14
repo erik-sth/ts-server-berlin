@@ -5,8 +5,7 @@ interface Item {
     endTime: Date;
     eventId: string;
     studentIds: string[];
-    groupCapazity: number;
-    updatedGroupCapacity: number;
+    studentCapacity: number;
 }
 
 export default Item;

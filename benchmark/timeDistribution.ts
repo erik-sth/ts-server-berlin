@@ -59,7 +59,7 @@ const benchmarkResults: BenchmarkResults = {
     middleValue,
     timestamp: new Date().toISOString(),
 };
-const resultsFilePath: string = 'results.json';
+const resultsFilePath: string = 'benchmark/results.json';
 let existingResultsArray: BenchmarkResults[] = [];
 
 if (fs.existsSync(resultsFilePath)) {

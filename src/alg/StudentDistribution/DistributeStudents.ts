@@ -6,93 +6,148 @@ function distributeStudentsToPaths(
     items: Item[],
     groups: Group[],
     project: Project
-) {
-    setGroupsWithOnePath(groups, items);
+): void {
+    setGroupsWithOnePath(groups);
     const changableGroups = groups.filter((group) => group.paths.length > 1);
-    let relevantItems = findRelevantItems(items, changableGroups);
 
-    relevantItems = filterOutItemsWithoutCapacityProblems(
-        relevantItems,
-        amountRelevantStudents(changableGroups)
-    );
-    return distributeWithMinimumCapacity(
-        changableGroups,
-        relevantItems,
-        project
-    );
-}
+    const groupsDistribution: {
+        groupId: number;
+        distributedStudentsPerPath: number[];
+        validDistributionNumbers: number[][];
+        amountToDistribute: number;
+        remainingToDistribute: number;
+    }[] = [];
 
-function distributeWithMinimumCapacity(
-    changableGroups: Group[],
-    relevantItems: Item[],
-    project: Project
-) {
-    let working = true;
-    changableGroups.forEach((group) => {
-        let amountStudents = group.studentIds.length;
-        group.paths.forEach((path) => {
-            const minCapacity = Math.min(
-                ...path.path.map((pathItem) => pathItem.updatedGroupCapacity),
-                group.studentIds.length
-            );
-            path.valueForTestingStudentDistribution = minCapacity;
-            amountStudents -= minCapacity;
-            relevantItems.forEach((item) => {
-                if (path.path.includes(item)) {
-                    item.updatedGroupCapacity -= minCapacity;
-                }
-            });
+    changableGroups.forEach((g) => {
+        groupsDistribution.push({
+            groupId: g._id,
+            amountToDistribute: g.studentIds.length,
+            remainingToDistribute: g.studentIds.length,
+            distributedStudentsPerPath: Array(g.paths.length).fill(0),
+            validDistributionNumbers: [],
         });
+    });
 
-        if (amountStudents > 0) {
-            working = false;
-            project.failed = true;
-            project.reasonForFailing = 'Students left after distribution done';
+    let validFound = false;
+
+    changableGroups.forEach((g, index) => {
+        distributeItems(
+            0,
+            g.studentIds.length,
+            new Array(g.paths.length).fill(0),
+            groupsDistribution[index].validDistributionNumbers,
+            g
+        );
+    });
+
+    if (!validFound) {
+        distributeStudentsToPath(0, 0);
+    }
+
+    // Recursive function to distribute items
+    function distributeItems(
+        currentIndex: number,
+        remainingItems: number,
+        currentDistribution: number[],
+        validDistributionNumbers: number[][],
+        group: Group
+    ): void {
+        if (validFound) {
+            return;
         }
-    });
-    return working;
+
+        if (currentIndex === currentDistribution.length - 1) {
+            currentDistribution[currentIndex] = remainingItems;
+
+            group.paths.forEach((p, index) => {
+                p.testValueForDistributingStudents = currentDistribution[index];
+            });
+
+            if (isValid(groups)) {
+                validDistributionNumbers.push([...currentDistribution]);
+            } else {
+                group.paths.forEach((p) => {
+                    p.testValueForDistributingStudents = 0;
+                });
+            }
+        } else {
+            for (let i: number = 0; i <= remainingItems; i++) {
+                currentDistribution[currentIndex] = i;
+                distributeItems(
+                    currentIndex + 1,
+                    remainingItems - i,
+                    currentDistribution,
+                    validDistributionNumbers,
+                    group
+                );
+            }
+        }
+    }
+
+    // Function to distribute students to paths recursively
+    function distributeStudentsToPath(
+        currentIndex: number,
+        groupIndex: number
+    ): void {
+        if (validFound || groupIndex >= changableGroups.length) {
+            project.failedCalculating = true;
+            return;
+        }
+
+        const group = groupsDistribution[groupIndex];
+
+        if (currentIndex >= group.validDistributionNumbers.length) {
+            distributeStudentsToPath(0, groupIndex + 1);
+            return;
+        }
+
+        group.validDistributionNumbers[currentIndex].forEach(
+            (distributionNumber, index) => {
+                changableGroups[groupIndex].paths[
+                    index
+                ].testValueForDistributingStudents = distributionNumber;
+            }
+        );
+
+        if (isValid(groups)) {
+            validFound = true;
+            return;
+        }
+
+        distributeStudentsToPath(currentIndex + 1, groupIndex);
+    }
 }
 
-function amountRelevantStudents(changableGroups: Group[]) {
-    return changableGroups.reduce(
-        (total, group) => total + group.studentIds.length,
-        0
-    );
-}
+function isValid(groups: Group[]): boolean {
+    const mapOfUsedCapacityPerItem: Map<Item, number> = new Map();
+    let isValidDistribution = true;
 
-function findRelevantItems(items: Item[], changableGroups: Group[]): Item[] {
-    return items.filter((item) => {
-        let counter = 0;
-        changableGroups.forEach((group) => {
-            group.paths.forEach((path) => {
-                if (path.path.includes(item)) {
-                    counter++;
+    groups.forEach((g) => {
+        g.paths.forEach((path) => {
+            path.itemsInPath.forEach((item) => {
+                const itemMap = mapOfUsedCapacityPerItem.get(item) || 0;
+                mapOfUsedCapacityPerItem.set(
+                    item,
+                    itemMap + path.testValueForDistributingStudents
+                );
+
+                if (
+                    item.studentCapacity < mapOfUsedCapacityPerItem.get(item)!
+                ) {
+                    isValidDistribution = false;
                 }
             });
         });
-        return counter > 0;
     });
+
+    return isValidDistribution;
 }
 
-function filterOutItemsWithoutCapacityProblems(
-    relevantItems: Item[],
-    amountRelevantStudents: number
-) {
-    return relevantItems.filter(
-        (item) => item.updatedGroupCapacity < amountRelevantStudents
-    );
-}
-
-function setGroupsWithOnePath(groups: Group[], items: Item[]) {
+function setGroupsWithOnePath(groups: Group[]): void {
     groups.forEach((group) => {
         if (group.paths.length === 1) {
-            group.paths[0].valueForTestingStudentDistribution =
+            group.paths[0].testValueForDistributingStudents =
                 group.studentIds.length;
-            items.forEach((item) => {
-                if (group.paths[0].path.includes(item)) {
-                    item.updatedGroupCapacity -= group.studentIds.length;
-                }
-            });
         }
     });
 }
