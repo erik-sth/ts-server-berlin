@@ -7,7 +7,7 @@ function distributeStudentsToPaths(
     groups: Group[],
     project: Project
 ): void {
-    setGroupsWithOnePath(groups, items);
+    setGroupsWithOnePath(groups);
     const changableGroups = groups.filter((group) => group.paths.length > 1);
 
     const groupsDistribution: {
@@ -143,16 +143,11 @@ function isValid(groups: Group[]): boolean {
     return isValidDistribution;
 }
 
-function setGroupsWithOnePath(groups: Group[], items: Item[]): void {
+function setGroupsWithOnePath(groups: Group[]): void {
     groups.forEach((group) => {
         if (group.paths.length === 1) {
             group.paths[0].testValueForDistributingStudents =
                 group.studentIds.length;
-            items.forEach((item) => {
-                if (group.paths[0].itemsInPath.includes(item)) {
-                    item.remainingCapacity -= group.studentIds.length;
-                }
-            });
         }
     });
 }

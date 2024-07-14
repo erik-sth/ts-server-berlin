@@ -9,7 +9,6 @@ const items: Item[] = [
         eventId: 'group1',
         studentIds: [],
         studentCapacity: 100,
-        remainingCapacity: 100,
     },
     {
         _id: 'id2',
@@ -19,7 +18,6 @@ const items: Item[] = [
         eventId: 'group2',
         studentIds: [],
         studentCapacity: 2,
-        remainingCapacity: 2,
     },
     {
         _id: 'id3',
@@ -29,7 +27,6 @@ const items: Item[] = [
         eventId: 'group3',
         studentIds: [],
         studentCapacity: 100,
-        remainingCapacity: 100,
     },
     {
         _id: 'id4',
@@ -39,7 +36,6 @@ const items: Item[] = [
         eventId: 'solo3',
         studentIds: [],
         studentCapacity: 100,
-        remainingCapacity: 100,
     },
     {
         _id: 'id5',
@@ -49,7 +45,6 @@ const items: Item[] = [
         eventId: 'group2',
         studentIds: [],
         studentCapacity: 98,
-        remainingCapacity: 98,
     },
     {
         _id: 'id6',
@@ -59,7 +54,6 @@ const items: Item[] = [
         eventId: 'group1',
         studentIds: [],
         studentCapacity: 50,
-        remainingCapacity: 50,
     },
     {
         _id: 'poll1',
@@ -69,7 +63,6 @@ const items: Item[] = [
         eventId: 'poll1',
         studentIds: [],
         studentCapacity: 100,
-        remainingCapacity: 100,
     },
     {
         _id: 'id7',
@@ -79,7 +72,6 @@ const items: Item[] = [
         eventId: 'solo4',
         studentIds: [],
         studentCapacity: 100,
-        remainingCapacity: 100,
     },
     {
         _id: 'id8',
@@ -89,7 +81,6 @@ const items: Item[] = [
         eventId: 'solo5',
         studentIds: [],
         studentCapacity: 100,
-        remainingCapacity: 100,
     },
 
     {
@@ -100,7 +91,6 @@ const items: Item[] = [
         eventId: 'solo2',
         studentIds: [],
         studentCapacity: 100,
-        remainingCapacity: 100,
     },
     {
         _id: 'id10',
@@ -110,7 +100,6 @@ const items: Item[] = [
         eventId: 'group3',
         studentIds: [],
         studentCapacity: 98,
-        remainingCapacity: 98,
     },
     {
         _id: 'id11',
@@ -119,8 +108,7 @@ const items: Item[] = [
         endTime: new Date(2023, 8, 21, 15, 30),
         eventId: 'poll2',
         studentIds: [],
-        studentCapacity: 100,
-        remainingCapacity: 100,
+        studentCapacity: 50,
     },
 ];
 

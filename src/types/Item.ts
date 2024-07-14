@@ -6,7 +6,6 @@ interface Item {
     eventId: string;
     studentIds: string[];
     studentCapacity: number;
-    remainingCapacity: number;
 }
 
 export default Item;
