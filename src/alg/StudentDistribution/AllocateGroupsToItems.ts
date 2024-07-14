@@ -1,7 +1,7 @@
 import type Item from '../../types/Item';
 import { Group } from '../../Class/Groups';
-import { getRoom } from '../../data/Rooms';
 import Project from '../../types/Project';
+import { getRoom } from '../../../data/Rooms';
 
 function allocateGroupsToItems(
     items: Item[],

@@ -1,5 +1,5 @@
-import Project from '../types/Project';
-import Room from '../types/Room';
+import Project from '../src/types/Project';
+import Room from '../src/types/Room';
 
 const rooms: Room[] = [
     {

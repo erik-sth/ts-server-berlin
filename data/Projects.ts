@@ -1,4 +1,4 @@
-import { Project } from '../../test/alg/data';
+import Project from '../src/types/Project';
 
 const berlin: Project = {
     _id: 'projectId1',

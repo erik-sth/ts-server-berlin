@@ -11,12 +11,12 @@ import { findPathsForTheGroups } from './StudentDistribution/FindPaths';
 import { allocateGroupsToItems } from './StudentDistribution/AllocateGroupsToItems';
 
 //data and utils
-import { rooms } from '../data/Rooms';
 import {
     buildGroupsByPaths,
     getVotingIds,
     validating,
 } from './StudentDistribution/Utils';
+import { rooms } from '../../data/Rooms';
 
 function main(
     items: Item[],

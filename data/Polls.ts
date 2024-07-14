@@ -1,4 +1,4 @@
-import PollQuestion from '../types/Polls';
+import PollQuestion from '../src/types/Polls';
 
 const polls: PollQuestion[] = [
     {

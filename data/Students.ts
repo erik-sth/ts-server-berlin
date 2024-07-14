@@ -1,4 +1,4 @@
-import Student from '../types/Student';
+import Student from '../src/types/Student';
 
 const students: Student[] = [
     { _id: 'person1' },

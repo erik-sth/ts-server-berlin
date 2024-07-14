@@ -1,8 +1,8 @@
+import { getItems } from '../data/Items';
+import { getPolls } from '../data/Polls';
+import { getProject } from '../data/Projects';
+import { getStudents } from '../data/Students';
 import { main } from '../src/alg/StudentDistribution';
-import { getItems } from '../src/data/Items';
-import { getPolls } from '../src/data/Polls';
-import { getProject } from '../src/data/Projects';
-import { getStudents } from '../src/data/Students';
 import * as fs from 'fs';
 
 interface BenchmarkResults {
@@ -26,6 +26,7 @@ const executionTimes: number[] = [];
 
 // Run the function 1000 times and record execution times
 for (let i = 0; i < numIterations; i++) {
+    console.log('new calculation: ' + i);
     const startTime = performance.now();
     main(items, students, project, polls);
     const endTime = performance.now();
@@ -52,8 +53,8 @@ if (numIterations % 2 === 0) {
 }
 
 const benchmarkResults: BenchmarkResults = {
-    algorithm: 'TimeDistribution prioritize Roommates',
-    version: 'v3.3',
+    algorithm: 'Finished alg (Distribution solved by Backgracking)',
+    version: 'v4',
     numIterations,
     executionTimes,
     middleValue,
