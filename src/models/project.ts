@@ -5,8 +5,8 @@ import Project from '../types/Project';
 // Project schema
 const projectSchema = new Schema<Project>({
     name: { type: String, minlength: 3, maxlength: 50, required: true },
-    idsThatAreRequiredForEveryone: { type: [String], required: true },
-    relatedPolls: { type: [String], required: false },
+    requiredEventGroupsAsIds: { type: [String], required: true },
+    pollIds: { type: [String], required: false },
     status: {
         type: String,
         enum: [
@@ -25,7 +25,7 @@ const projectSchema = new Schema<Project>({
         ],
         required: true,
     },
-    failed: { type: Boolean, required: false },
+    failedCalculating: { type: Boolean, required: false },
     reasonForFailing: { type: String, required: false },
 });
 
@@ -60,10 +60,10 @@ function validateSchema(project: Partial<Project>) {
 
     const { error } = schema.validate({
         name: project.name,
-        idsThatAreRequiredForEveryone: project.idsThatAreRequiredForEveryone,
-        relatedPolls: project.relatedPolls,
+        idsThatAreRequiredForEveryone: project.requiredEventGroupsAsIds,
+        relatedPolls: project.pollIds,
         status: project.status,
-        failed: project.failed,
+        failed: project.failedCalculating,
     });
 
     return { error };

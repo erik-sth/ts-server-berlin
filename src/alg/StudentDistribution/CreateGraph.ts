@@ -23,7 +23,7 @@ function createGraph(items: Item[], project: Project): DirectedGraph<Item> {
         });
     });
     if (G.sizeEdges() === 0) {
-        project.failed = true;
+        project.failedCalculating = true;
         project.reasonForFailing = 'Graph build failed: ZeroEdges';
     }
     return G;

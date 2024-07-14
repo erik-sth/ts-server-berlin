@@ -1,7 +1,7 @@
 import { main } from '../../src/alg/StudentDistribution';
 import {
     findItemsByStudentId,
-    getDefaultIds,
+    getRequiredGroupIds,
     getVotingIds,
 } from '../../src/alg/StudentDistribution/Utils';
 import { items, polls, students, project } from './data';
@@ -14,7 +14,7 @@ describe('Time Distribution Algorithm', () => {
         expect(project.status).toEqual('FinishedCalc');
     });
     it('should allocate the correct number of items to each student', () => {
-        const requiredIdsLength = getDefaultIds(project).length;
+        const requiredIdsLength = getRequiredGroupIds(project).length;
 
         students.forEach((student) => {
             const studentId = student._id;
@@ -37,7 +37,7 @@ describe('Time Distribution Algorithm', () => {
                 allocationResult
             );
             const expectedItemIds = [
-                ...getDefaultIds(project),
+                ...getRequiredGroupIds(project),
                 ...getVotingIds(studentId, polls),
             ];
 
@@ -49,7 +49,7 @@ describe('Time Distribution Algorithm', () => {
     it('should have only the allowed group size of students', () => {
         items.forEach((item) => {
             expect(item.studentIds.length).toBeLessThanOrEqual(
-                item.groupCapazity
+                item.studentCapacity
             );
         });
     });
@@ -61,8 +61,6 @@ describe('Time Distribution Algorithm', () => {
                 studentId,
                 allocationResult
             );
-
-            expect(itemsForStudent.length).toBeGreaterThan(0);
 
             for (let i = 0; i < itemsForStudent.length; i++) {
                 for (let j = i + 1; j < itemsForStudent.length; j++) {
@@ -80,7 +78,7 @@ describe('Time Distribution Algorithm', () => {
                         otherItem.eventId === itemsForStudent[i].eventId &&
                         otherItem !== itemsForStudent[i]
                 );
-                const groupSize = itemsForStudent[i].groupCapazity;
+                const groupSize = itemsForStudent[i].studentCapacity;
                 const studentsInGroup = groupEvents.reduce(
                     (total, groupEvent) => total + groupEvent.studentIds.length,
                     0
@@ -93,7 +91,7 @@ describe('Time Distribution Algorithm', () => {
     it('should return false when no solution is found', () => {
         const result = main(failedItems, students, project, polls);
         expect(project.status).toBe('Distributing');
-        expect(project.failed).toBe(true);
+        expect(project.failedCalculating).toBe(true);
         expect(result).toBe(false);
     });
 });

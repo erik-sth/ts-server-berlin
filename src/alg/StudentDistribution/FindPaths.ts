@@ -2,14 +2,14 @@ import { DirectedGraph, GraphNode } from '../../Class/Graph';
 import { Group } from '../../Class/Groups';
 import Item from '../../types/Item';
 import Project from '../../types/Project';
-import { getDefaultIds } from './Utils';
+import { getRequiredGroupIds } from './Utils';
 
 function findPathsForTheGroups(
     groups: Group[],
     items: Item[],
     g: DirectedGraph<Item>,
     project: Project,
-    requiredIds: Set<string> = new Set<string>(getDefaultIds(project))
+    requiredIds: Set<string> = new Set<string>(getRequiredGroupIds(project))
 ) {
     const entries = g.getNodesWithIndegreeZero();
     groups.forEach((group) => {
@@ -19,7 +19,7 @@ function findPathsForTheGroups(
             dfs(entry, ids, [], group.requiredEvents, group, items);
         });
         if (group.paths.length == 0) {
-            project.failed = true;
+            project.failedCalculating = true;
             project.reasonForFailing = 'Zero paths for Group Found';
         }
     });
@@ -44,8 +44,8 @@ function dfs(
 
     if (remainingIds.size === 0) {
         group.paths.push({
-            path: newPath,
-            valueForTestingStudentDistribution: 0,
+            itemsInPath: newPath,
+            testValueForDistributingStudents: 0,
         });
     } else if (node.edges !== null) {
         node.edges.forEach((edge) =>
@@ -57,7 +57,7 @@ function dfs(
 }
 
 function getMaxAvailableCapacity(path: Item[]): number {
-    return Math.min(...path.map((item) => item.groupCapazity));
+    return Math.min(...path.map((item) => item.studentCapacity));
 }
 
 export { findPathsForTheGroups, getMaxAvailableCapacity };

@@ -1,8 +1,8 @@
 interface Project {
     _id: string;
     name: string;
-    idsThatAreRequiredForEveryone: string[];
-    relatedPolls: string[];
+    requiredEventGroupsAsIds: string[];
+    pollIds: string[];
     status:
         | 'InPreperation'
         | 'WaitingForWorker'
@@ -16,7 +16,7 @@ interface Project {
         | 'FinishedCalc'
         | 'StoreData'
         | 'Finished';
-    failed: boolean;
+    failedCalculating: boolean;
     reasonForFailing: string;
 }
 

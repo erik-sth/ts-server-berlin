@@ -11,8 +11,8 @@ const items: Item[] = [
         endTime: new Date(2023, 8, 16, 10, 0),
         eventId: 'group1',
         studentIds: [],
-        groupCapazity: 100,
-        updatedGroupCapacity: 100,
+        studentCapacity: 100,
+        remainingCapacity: 100,
     },
     {
         _id: 'id2',
@@ -21,8 +21,8 @@ const items: Item[] = [
         endTime: new Date(2023, 8, 16, 10, 0),
         eventId: 'group2',
         studentIds: [],
-        groupCapazity: 50,
-        updatedGroupCapacity: 50,
+        studentCapacity: 50,
+        remainingCapacity: 50,
     },
     {
         _id: 'id3',
@@ -31,8 +31,8 @@ const items: Item[] = [
         endTime: new Date(2023, 8, 16, 15, 0),
         eventId: 'group3',
         studentIds: [],
-        groupCapazity: 50,
-        updatedGroupCapacity: 50,
+        studentCapacity: 50,
+        remainingCapacity: 50,
     },
     {
         _id: 'id4',
@@ -41,8 +41,8 @@ const items: Item[] = [
         endTime: new Date(2023, 8, 17, 12, 0),
         eventId: 'solo3',
         studentIds: [],
-        groupCapazity: 20,
-        updatedGroupCapacity: 20,
+        studentCapacity: 20,
+        remainingCapacity: 20,
     },
     {
         _id: 'id5',
@@ -51,8 +51,8 @@ const items: Item[] = [
         endTime: new Date(2023, 8, 17, 15, 30),
         eventId: 'group2',
         studentIds: [],
-        groupCapazity: 50,
-        updatedGroupCapacity: 50,
+        studentCapacity: 50,
+        remainingCapacity: 50,
     },
     {
         _id: 'id6',
@@ -61,8 +61,8 @@ const items: Item[] = [
         endTime: new Date(2023, 8, 18, 12, 0),
         eventId: 'group1',
         studentIds: [],
-        groupCapazity: 50,
-        updatedGroupCapacity: 50,
+        studentCapacity: 50,
+        remainingCapacity: 50,
     },
     {
         _id: 'poll1',
@@ -71,8 +71,8 @@ const items: Item[] = [
         endTime: new Date(2023, 8, 18, 12, 0),
         eventId: 'poll1',
         studentIds: [],
-        groupCapazity: 100,
-        updatedGroupCapacity: 100,
+        studentCapacity: 100,
+        remainingCapacity: 100,
     },
     {
         _id: 'id7',
@@ -81,8 +81,8 @@ const items: Item[] = [
         endTime: new Date(2023, 8, 18, 15, 45),
         eventId: 'solo4',
         studentIds: [],
-        groupCapazity: 100,
-        updatedGroupCapacity: 100,
+        studentCapacity: 100,
+        remainingCapacity: 100,
     },
     {
         _id: 'id8',
@@ -91,8 +91,8 @@ const items: Item[] = [
         endTime: new Date(2023, 8, 19, 10, 30),
         eventId: 'solo5',
         studentIds: [],
-        groupCapazity: 2,
-        updatedGroupCapacity: 2,
+        studentCapacity: 2,
+        remainingCapacity: 2,
     },
 
     {
@@ -102,8 +102,8 @@ const items: Item[] = [
         endTime: new Date(2023, 8, 19, 15, 0),
         eventId: 'solo2',
         studentIds: [],
-        groupCapazity: 100,
-        updatedGroupCapacity: 100,
+        studentCapacity: 100,
+        remainingCapacity: 100,
     },
     {
         _id: 'id10',
@@ -112,8 +112,8 @@ const items: Item[] = [
         endTime: new Date(2023, 8, 20, 15, 30),
         eventId: 'group3',
         studentIds: [],
-        groupCapazity: 50,
-        updatedGroupCapacity: 50,
+        studentCapacity: 50,
+        remainingCapacity: 50,
     },
     {
         _id: 'id11',
@@ -122,8 +122,8 @@ const items: Item[] = [
         endTime: new Date(2023, 8, 21, 15, 30),
         eventId: 'poll2',
         studentIds: [],
-        groupCapazity: 100,
-        updatedGroupCapacity: 100,
+        studentCapacity: 100,
+        remainingCapacity: 100,
     },
 ];
 
@@ -215,7 +215,7 @@ export { polls };
 const project: Project = {
     _id: 'ProjectId',
     name: 'Berlin 2024',
-    idsThatAreRequiredForEveryone: [
+    requiredEventGroupsAsIds: [
         'group1',
         'group2',
         'group3',
@@ -224,10 +224,10 @@ const project: Project = {
         'solo4',
         'solo5',
     ],
-    failed: false,
+    failedCalculating: false,
     status: 'WaitingForWorker',
     reasonForFailing: '',
-    relatedPolls: ['id0', 'id1'],
+    pollIds: ['id0', 'id1'],
 };
 
 export { project, Project };

@@ -50,7 +50,7 @@ router.post('/', async (req: PaginationRequest, res: Response) => {
             'idsThatAreRequiredForEveryone',
         ])
     );
-    project.failed = false;
+    project.failedCalculating = false;
 
     try {
         await project.save();

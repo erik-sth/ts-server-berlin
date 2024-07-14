@@ -3,7 +3,7 @@ import { Project } from '../../test/alg/data';
 const berlin: Project = {
     _id: 'projectId1',
     name: 'Berlin 2024',
-    idsThatAreRequiredForEveryone: [
+    requiredEventGroupsAsIds: [
         'group1',
         'group2',
         'group3',
@@ -12,10 +12,10 @@ const berlin: Project = {
         'solo4',
         'solo5',
     ],
-    relatedPolls: ['id0', 'id1'],
+    pollIds: ['id0', 'id1'],
     status: 'WaitingForWorker',
     reasonForFailing: '',
-    failed: false,
+    failedCalculating: false,
 };
 const projects = [berlin];
 

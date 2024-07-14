@@ -3,6 +3,7 @@ interface PollChoice {
     text: string;
     eventId: string;
     studentIds: string[];
+    limit?: number;
 }
 
 interface PollQuestion {
