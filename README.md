@@ -3,7 +3,7 @@
 Distributing Students to Their Paths in a Timetable
 
 ## Introduction
-During our school trip to Berlin, my teacher jokingly suggested creating a Berlin app to distribute students to multiple paths. The idea evolved to include displaying each student's schedule on a website.
+During our school trip to Berlin, my teacher jokingly suggested creating a Berlin app to simplify the planning process. The idea evolved to include displaying each student's schedule on a website and a lot more usefull features.
 
 ## Algorithm History
 1. In each approach, the initial step involved building a graph. Here's a brief overview:
@@ -14,36 +14,4 @@ During our school trip to Berlin, my teacher jokingly suggested creating a Berli
 6. Maxflow Graphs: Attempted to use maxflow graphs to distribute students to each path, but this solution proved challenging.
 7. Prioritizing Roommates: Augmented the algorithm by prioritizing roommates in the allocation proccess, when they made the same choices.
 
-## Commands
 
-### Installation
-
-Run the following command to install the project dependencies:
-
-```bash
-npm install
-```
-
-### Testing
-
-Execute the following command to run tests:
-
-```bash
-npm test
-```
-
-### Build
-
-To build the project, use:
-
-```bash
-npm run build
-```
-
-### Start
-
-To start the project, use:
-
-```bash
-npm start
-```
