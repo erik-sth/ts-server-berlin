@@ -110,14 +110,6 @@ function distributeStudentsToPaths(
         );
 
         if (isValid(groups)) {
-            console.log('new result');
-            groups.forEach((g) => {
-                const nums: number[] = [];
-                g.paths.forEach((p) => {
-                    nums.push(p.testValueForDistributingStudents);
-                });
-                console.log(`groupid: ${g._id}, pathDistribution: ${nums}`);
-            });
             validFound = true;
             return;
         }
